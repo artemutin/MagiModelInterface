@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <cmath>
+#include <list>
 
 //outer constants, determining parameters of simulation
 struct SimulationConstants {
@@ -20,13 +21,13 @@ struct CapitalFunction {
 };
 
 //yet another inner model constants
-class ProductionFunction  {
+class RefactorFunction  {
     double a;
     double p1;
     double p2;
 
 public:
-    ProductionFunction(double a, double p1, double p2):a(a), p1(p1), p2(p2){}
+    RefactorFunction(double a, double p1, double p2):a(a), p1(p1), p2(p2){}
     double operator() (const double& capital, const double& refactoredWood) const;
 };
 
@@ -37,19 +38,30 @@ struct ExportFunction {
     double operator() (const double& exportedWood) const;
 };
 
+class Proportion; class SimulationTier;
+
+struct ProductionFunction{
+    RefactorFunction rf;
+    ExportFunction ef;
+    double woodProduction;
+
+    double operator() (const double& capital, const Proportion& prop) const;
+};
+
 class Proportion {
     static double calcProp(const double& a, const double& b);
     static double calcB(const double& a, const double& x);
     Proportion(const double& a, const double& b, const double& x):a(a), b(b), x(x){}
 
 public:
-    const  double a, b; // transform matrix elements
-    const double x; //actual prop of refactored wood
+    double a, b; // transform matrix elements
+    double x; //actual prop of refactored wood
 
     static Proportion makeNewProportionFromAB(const double& a, const double& b);
     static Proportion makeNewProportionFromAX(const double& a, const double& x);
     double operator[] (std::size_t i) const; //get props x_1 and x_2
     Proportion makeNewProportionFromAlpha(const double& alpha) const;
+    Proportion(){}//bad, bad empty construction shit
 };
 
 struct CostFunction {
@@ -58,11 +70,34 @@ struct CostFunction {
     double operator() (const double& controlParameter, const double& production) const;
 };
 
-class SimulationTier {
-    const std::weak_ptr<SimulationConstants> simulationConstants;
-    const std::weak_ptr<ProductionFunction> productionFunction;
+struct FirstSimulationTier {
+    double production, capital;//current production and capital
+    Proportion proportion;
+    int tier;//what tier of simulation it is
+    double result;//result of the tier - summary production, or whatever;
 
+    static SimulationConstants simConstants;
+    static CapitalFunction capitalFunction;
+    static ProductionFunction productionFunction;
+    static CostFunction costFunction;
 
+    std::list<SimulationTier> diveInto();
+
+    double computeResult(const FirstSimulationTier& prevRes);
+
+    FirstSimulationTier(const double production, const double capital, const Proportion prop,
+                        double result, int tier = 0):production(production), capital(capital), proportion(prop),
+                        tier(tier), result(result){}
+    FirstSimulationTier(){}
 };
+
+struct SimulationTier: public FirstSimulationTier{
+    double alpha;
+    double controlParameter;
+
+    SimulationTier(const FirstSimulationTier& prev, double controlParameter);
+};
+
+
 
 #endif // MODEL_HPP

@@ -37,7 +37,7 @@ void MagiTest::capitalFunction()
 
 void MagiTest::productionFunction()
 {
-    ProductionFunction pf = ProductionFunction{ 1, 0.4, 0.7 };
+    RefactorFunction pf = RefactorFunction{ 1, 0.4, 0.7 };
     QCOMPARE( pf(1e6, 1e5*0.3), 341967.5353414207);
 }
 

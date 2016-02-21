@@ -1,7 +1,7 @@
 #include "model.hpp"
 
 
-double ProductionFunction::operator()(const double &capital, const double &resource) const
+double RefactorFunction::operator()(const double &capital, const double &resource) const
 {
     return a*pow(capital, p1)*pow(resource, p2);
 }
@@ -58,4 +58,60 @@ double CostFunction::operator()(const double &controlParameter, const double &pr
 {
     auto num = controlParameter*saving*production;
     return num/(c + num);
+}
+
+double ProductionFunction::operator()(const double &capital, const Proportion &prop) const
+{
+    return ef(prop[1]*woodProduction) + rf(capital, prop[2]*woodProduction);
+}
+
+SimulationTier::SimulationTier(const FirstSimulationTier &prev, double controlParameter):
+  controlParameter(controlParameter)
+{
+    FirstSimulationTier::tier = prev.tier + 1;
+    //since last year, the amount of capital of industry has changed due to investments and amortisation
+    capital = FirstSimulationTier::capitalFunction(prev.capital, prev.production, controlParameter);
+    //also we bought some lobby from last years investment budget
+    alpha = FirstSimulationTier::costFunction(controlParameter, prev.production);
+    //this lobby has changed a proportion of wood production
+    proportion = prev.proportion.makeNewProportionFromAlpha(alpha);
+    //changed proportion and capital affects a production, ofcourse
+    production = FirstSimulationTier::productionFunction(capital, proportion);
+    //and we can finally compute a result function
+    result = FirstSimulationTier::computeResult(prev);
+}
+
+std::list<SimulationTier> FirstSimulationTier::diveInto()
+{
+    if (tier == FirstSimulationTier::simConstants.numEpochs){
+        return std::list<SimulationTier>{ *this }; //last tier initializes a list
+    }else{
+        auto max_result = -1;
+        std::list<SimulationTier> bestList;
+
+        for (double u = 0; u <= 1; u += FirstSimulationTier::simConstants.stepU){
+            //produce next tier with its results
+            auto nextTier = SimulationTier(*this, u);
+            //but it only produce next level tier and nothing more
+            //then we need to dive into further recursion deep, to reach the end
+            std::list<SimulationTier> retList = nextTier.diveInto();
+            //after floating, we got list with path from bottom to current tier
+            //so, if it is best result, that we had, remember it to pass up in callstack
+            if (retList.front().result > max_result){
+                bestList = retList;
+                max_result = retList.front().result;
+            }
+        }
+
+        //finally, with best result, we pass our list further,
+        //and dont forget to add themselves to it
+        bestList.push_back(*this);
+        return bestList;
+    }
+}
+
+
+double FirstSimulationTier::computeResult(const SimulationTier &prev)
+{
+    return production + prev.production;
 }
