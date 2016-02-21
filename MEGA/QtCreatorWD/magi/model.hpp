@@ -1,0 +1,68 @@
+#ifndef MODEL_HPP
+#define MODEL_HPP
+
+#include <memory>
+#include <cmath>
+
+//outer constants, determining parameters of simulation
+struct SimulationConstants {
+    double stepU;
+    int numEpochs;
+};
+
+//inner model constants, dont change in simulation run
+struct CapitalFunction {
+    double delta;
+    double savings;
+
+    double operator() (const double& capital, const double& production,
+                       const double& controlParameter) const;
+};
+
+//yet another inner model constants
+class ProductionFunction  {
+    double a;
+    double p1;
+    double p2;
+
+public:
+    ProductionFunction(double a, double p1, double p2):a(a), p1(p1), p2(p2){}
+    double operator() (const double& capital, const double& refactoredWood) const;
+};
+
+//export cost and overall raw wood production, for now also constants
+struct ExportFunction {
+    const double e;
+
+    double operator() (const double& exportedWood) const;
+};
+
+class Proportion {
+    static double calcProp(const double& a, const double& b);
+    static double calcB(const double& a, const double& x);
+    Proportion(const double& a, const double& b, const double& x):a(a), b(b), x(x){}
+
+public:
+    const  double a, b; // transform matrix elements
+    const double x; //actual prop of refactored wood
+
+    static Proportion makeNewProportionFromAB(const double& a, const double& b);
+    static Proportion makeNewProportionFromAX(const double& a, const double& x);
+    double operator[] (std::size_t i) const; //get props x_1 and x_2
+    Proportion makeNewProportionFromAlpha(const double& alpha) const;
+};
+
+struct CostFunction {
+    double c, saving;
+
+    double operator() (const double& controlParameter, const double& production) const;
+};
+
+class SimulationTier {
+    const std::weak_ptr<SimulationConstants> simulationConstants;
+    const std::weak_ptr<ProductionFunction> productionFunction;
+
+
+};
+
+#endif // MODEL_HPP
