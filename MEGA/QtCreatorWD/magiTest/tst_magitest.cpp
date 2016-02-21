@@ -15,6 +15,7 @@ private Q_SLOTS:
     void productionFunction();
     void exportFunction();
     void proportion();
+    void costFunction();
 };
 
 
@@ -50,6 +51,17 @@ void MagiTest::proportion()
 {
     Proportion p = Proportion::makeNewProportionFromAB(0.3, 0.7);
     QCOMPARE(p.x, 0.5);
+    Proportion p1 = Proportion::makeNewProportionFromAX(0.3, 0.7);
+    Proportion p2 = Proportion::makeNewProportionFromAB(p1.a, p1.b);
+    QCOMPARE(p1.x, p2.x);
+    QCOMPARE(p1.a, p2.a);
+    QCOMPARE(p1.b, p2.b);
+}
+
+void MagiTest::costFunction()
+{
+    auto c = CostFunction {1e4, 0.2};
+    QCOMPARE( c(0.5, 1e4), 0.0909090909090909 );
 }
 
 QTEST_APPLESS_MAIN(MagiTest)
