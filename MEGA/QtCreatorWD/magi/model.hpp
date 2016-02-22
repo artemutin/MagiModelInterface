@@ -9,6 +9,7 @@
 struct SimulationConstants {
     double stepU;
     int numEpochs;
+    SimulationConstants(double stepU, int numEpochs):stepU(stepU), numEpochs(numEpochs){}
 };
 
 //inner model constants, dont change in simulation run
@@ -16,6 +17,7 @@ struct CapitalFunction {
     double delta;
     double savings;
 
+    CapitalFunction(double delta, double savings):delta(delta), savings(savings){}
     double operator() (const double& capital, const double& production,
                        const double& controlParameter) const;
 };
@@ -34,7 +36,7 @@ public:
 //export cost and overall raw wood production, for now also constants
 struct ExportFunction {
     const double e;
-
+    ExportFunction(double e):e(e){}
     double operator() (const double& exportedWood) const;
 };
 
@@ -45,6 +47,8 @@ struct ProductionFunction{
     ExportFunction ef;
     double woodProduction;
 
+    ProductionFunction(double a, double p1, double p2, double exportCost, double woodProduction):
+        rf(a, p1, p2), ef(exportCost), woodProduction(woodProduction){}
     double operator() (const double& capital, const Proportion& prop) const;
 };
 
@@ -67,6 +71,7 @@ public:
 struct CostFunction {
     double c, saving;
 
+    CostFunction(double c, double saving):c(c), saving(saving){}
     double operator() (const double& controlParameter, const double& production) const;
 };
 
@@ -87,18 +92,15 @@ struct FirstSimulationTier {
 
     double computeResult(const FirstSimulationTier& prevRes);
 
-    FirstSimulationTier(const double production, const double capital, const Proportion prop,
-                        double result, int tier,
+    FirstSimulationTier(const double& production, const double& capital, const Proportion& prop,
+                        const double& result, const int& tier,
                         std::shared_ptr<SimulationConstants> simConstants,
                         std::shared_ptr<CapitalFunction> capitalFunction,
                         std::shared_ptr<ProductionFunction> productionFunction,
-                        std::shared_ptr<CostFunction> costFunction):
-                        production(production), capital(capital), proportion(prop),
-                        tier(tier), result(result), simConstants(simConstants),
-                        capitalFunction(capitalFunction), productionFunction(productionFunction),
-                        costFunction(costFunction){}
+                        std::shared_ptr<CostFunction> costFunction);
     FirstSimulationTier(){}
 };
+typedef FirstSimulationTier FST;
 
 struct SimulationTier: public FirstSimulationTier{
     double alpha;
@@ -108,7 +110,7 @@ struct SimulationTier: public FirstSimulationTier{
 
     virtual void addMyselfToList(std::list<SimulationTier>& ref );
 };
-
+typedef SimulationTier ST;
 
 
 #endif // MODEL_HPP

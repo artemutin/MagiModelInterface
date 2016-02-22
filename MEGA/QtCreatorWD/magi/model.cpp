@@ -128,3 +128,10 @@ double FirstSimulationTier::computeResult(const FirstSimulationTier &prev)
 {
     return production + prev.production;
 }
+
+FirstSimulationTier::FirstSimulationTier(const double &production, const double &capital, const Proportion &prop, const double &result, const int &tier, std::shared_ptr<SimulationConstants> simConstants, std::shared_ptr<CapitalFunction> capitalFunction, std::shared_ptr<ProductionFunction> productionFunction, std::shared_ptr<CostFunction> costFunction):production(production), capital(capital), proportion(prop), result(result), tier(tier),
+    simConstants(simConstants), capitalFunction(capitalFunction), productionFunction(productionFunction),
+    costFunction(costFunction)
+{
+
+}
