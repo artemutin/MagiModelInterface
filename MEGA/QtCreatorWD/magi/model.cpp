@@ -1,5 +1,5 @@
 #include "model.hpp"
-
+#include <iostream>
 
 double RefactorFunction::operator()(const double &capital, const double &resource) const
 {
@@ -90,6 +90,7 @@ void SimulationTier::addMyselfToList(std::list<SimulationTier> &ref)
 
 std::list<SimulationTier> FirstSimulationTier::diveInto()
 {
+    std::cout << "In tier:" << tier << std::endl;
     if (tier == FST::simConstants->numEpochs){
         std::list<SimulationTier> list;
         addMyselfToList(list);
