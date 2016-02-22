@@ -95,7 +95,7 @@ bool SimulationTier::operator ==(const SimulationTier &a) const
 
 std::list<SimulationTier> FirstSimulationTier::diveInto()
 {
-    std::cout << "In tier:" << tier << std::endl;
+    //std::cout << "In tier:" << tier << std::endl;
     if (tier == FST::simConstants->numEpochs){
         std::list<SimulationTier> list;
         addMyselfToList(list);
@@ -127,7 +127,7 @@ std::list<SimulationTier> FirstSimulationTier::diveInto()
 
 std::list<SimulationTier> FirstSimulationTier::diveIntoOpenMP()
 {
-    std::cout << "In tier:" << tier << std::endl;
+    //std::cout << "In tier:" << tier << std::endl;
     if (tier == FST::simConstants->numEpochs){
         std::list<SimulationTier> list;
         addMyselfToList(list);

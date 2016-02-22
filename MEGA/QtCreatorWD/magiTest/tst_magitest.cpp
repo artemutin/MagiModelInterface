@@ -1,6 +1,8 @@
 #include <QString>
 #include <QtTest>
 #include "../magi/model.hpp"
+#include <omp.h>
+#include <iostream>
 
 class MagiTest : public QObject
 {
@@ -18,6 +20,8 @@ private Q_SLOTS:
     void costFunction();
     void firstSimulationTier();
     void compareToOMP();
+    void benchmarkOMP();
+    void benchmarkNonOMP();
 };
 
 
@@ -78,13 +82,14 @@ void MagiTest::firstSimulationTier()
 
     FST* start = new FST(1e6, 1e5, Proportion::makeNewProportionFromAX(0.5, 0.3), 0, 0,
               simulationConstants, capitalFunction, productionFunction, costFunction);
-    auto best = start->diveInto();
+    auto best = start->diveIntoOpenMP();
     int i = 32;
 }
 
 void MagiTest::compareToOMP()
 {
-    auto simulationConstants = std::make_shared<SimulationConstants>(0.1, 4);
+    omp_set_num_threads(4);
+    auto simulationConstants = std::make_shared<SimulationConstants>(0.1, 3);
     auto capitalFunction  = std::make_shared<CapitalFunction>(0.95, 0.2);
     auto productionFunction  = std::make_shared<ProductionFunction>(100, 0.7, 0.3, 80, 1e5);
     auto costFunction  = std::make_shared<CostFunction>(1000, 0.2);
@@ -95,7 +100,39 @@ void MagiTest::compareToOMP()
               simulationConstants, capitalFunction, productionFunction, costFunction);
     auto r1 = sim1->diveInto();
     auto r2 = sim2->diveIntoOpenMP();
+    std::cout << r1.front().result << r2.front().result;
     QCOMPARE(r1, r2);
+}
+
+void MagiTest::benchmarkOMP()
+{
+    omp_set_num_threads(4);
+    auto simulationConstants = std::make_shared<SimulationConstants>(0.1, 6);
+    auto capitalFunction  = std::make_shared<CapitalFunction>(0.95, 0.2);
+    auto productionFunction  = std::make_shared<ProductionFunction>(100, 0.7, 0.3, 80, 1e5);
+    auto costFunction  = std::make_shared<CostFunction>(1000, 0.2);
+
+    FST* sim2 = new FST(1e6, 1e5, Proportion::makeNewProportionFromAX(0.5, 0.3), 0, 0,
+              simulationConstants, capitalFunction, productionFunction, costFunction);
+    QBENCHMARK{
+        auto r2 = sim2->diveIntoOpenMP();
+    }
+}
+
+void MagiTest::benchmarkNonOMP()
+{
+    omp_set_num_threads(4);
+    auto simulationConstants = std::make_shared<SimulationConstants>(0.1, 6);
+    auto capitalFunction  = std::make_shared<CapitalFunction>(0.95, 0.2);
+    auto productionFunction  = std::make_shared<ProductionFunction>(100, 0.7, 0.3, 80, 1e5);
+    auto costFunction  = std::make_shared<CostFunction>(1000, 0.2);
+
+    FST* sim1 = new FST(1e6, 1e5, Proportion::makeNewProportionFromAX(0.5, 0.3), 0, 0,
+              simulationConstants, capitalFunction, productionFunction, costFunction);
+    QBENCHMARK{
+        auto r1 = sim1->diveInto();
+    }
+
 }
 
 QTEST_APPLESS_MAIN(MagiTest)
