@@ -82,6 +82,8 @@ struct FirstSimulationTier {
     static CostFunction costFunction;
 
     std::list<SimulationTier> diveInto();
+    //polymorfic hack for adding to queue list
+    virtual void addMyselfToList(std::list<SimulationTier>& ref );
 
     double computeResult(const FirstSimulationTier& prevRes);
 
@@ -96,6 +98,8 @@ struct SimulationTier: public FirstSimulationTier{
     double controlParameter;
 
     SimulationTier(const FirstSimulationTier& prev, double controlParameter);
+
+    virtual void addMyselfToList(std::list<SimulationTier>& ref );
 };
 
 

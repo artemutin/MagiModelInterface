@@ -65,6 +65,13 @@ double ProductionFunction::operator()(const double &capital, const Proportion &p
     return ef(prop[1]*woodProduction) + rf(capital, prop[2]*woodProduction);
 }
 
+//static members definition
+SimulationConstants FirstSimulationTier::simConstants;
+CapitalFunction FirstSimulationTier::capitalFunction;
+ProductionFunction FirstSimulationTier::productionFunction;
+CostFunction FirstSimulationTier::costFunction;
+
+
 SimulationTier::SimulationTier(const FirstSimulationTier &prev, double controlParameter):
   controlParameter(controlParameter)
 {
@@ -81,10 +88,17 @@ SimulationTier::SimulationTier(const FirstSimulationTier &prev, double controlPa
     result = FirstSimulationTier::computeResult(prev);
 }
 
+void SimulationTier::addMyselfToList(std::list<SimulationTier> &ref)
+{
+    ref.push_back(*this);
+}
+
 std::list<SimulationTier> FirstSimulationTier::diveInto()
 {
     if (tier == FirstSimulationTier::simConstants.numEpochs){
-        return std::list<SimulationTier>{ *this }; //last tier initializes a list
+        std::list<SimulationTier> list;
+        addMyselfToList(list);
+        return list;
     }else{
         auto max_result = -1;
         std::list<SimulationTier> bestList;
@@ -105,13 +119,17 @@ std::list<SimulationTier> FirstSimulationTier::diveInto()
 
         //finally, with best result, we pass our list further,
         //and dont forget to add themselves to it
-        bestList.push_back(*this);
+        addMyselfToList(bestList);
         return bestList;
     }
 }
 
+void FirstSimulationTier::addMyselfToList(std::list<SimulationTier> &ref)
+{
+}
 
-double FirstSimulationTier::computeResult(const SimulationTier &prev)
+
+double FirstSimulationTier::computeResult(const FirstSimulationTier &prev)
 {
     return production + prev.production;
 }
