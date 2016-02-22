@@ -65,25 +65,20 @@ double ProductionFunction::operator()(const double &capital, const Proportion &p
     return ef(prop[1]*woodProduction) + rf(capital, prop[2]*woodProduction);
 }
 
-//static members definition
-SimulationConstants FirstSimulationTier::simConstants;
-CapitalFunction FirstSimulationTier::capitalFunction;
-ProductionFunction FirstSimulationTier::productionFunction;
-CostFunction FirstSimulationTier::costFunction;
+typedef FirstSimulationTier FST;
 
-
-SimulationTier::SimulationTier(const FirstSimulationTier &prev, double controlParameter):
+SimulationTier::SimulationTier(const FirstSimulationTier &prev, double controlParameter): FirstSimulationTier(prev),
   controlParameter(controlParameter)
 {
-    FirstSimulationTier::tier = prev.tier + 1;
+    FST::tier = prev.tier + 1;
     //since last year, the amount of capital of industry has changed due to investments and amortisation
-    capital = FirstSimulationTier::capitalFunction(prev.capital, prev.production, controlParameter);
+    capital = (*FST::capitalFunction)(prev.capital, prev.production, controlParameter);
     //also we bought some lobby from last years investment budget
-    alpha = FirstSimulationTier::costFunction(controlParameter, prev.production);
+    alpha = (*FST::costFunction)(controlParameter, prev.production);
     //this lobby has changed a proportion of wood production
     proportion = prev.proportion.makeNewProportionFromAlpha(alpha);
     //changed proportion and capital affects a production, ofcourse
-    production = FirstSimulationTier::productionFunction(capital, proportion);
+    production = (*FST::productionFunction)(capital, proportion);
     //and we can finally compute a result function
     result = FirstSimulationTier::computeResult(prev);
 }
@@ -95,7 +90,7 @@ void SimulationTier::addMyselfToList(std::list<SimulationTier> &ref)
 
 std::list<SimulationTier> FirstSimulationTier::diveInto()
 {
-    if (tier == FirstSimulationTier::simConstants.numEpochs){
+    if (tier == FST::simConstants->numEpochs){
         std::list<SimulationTier> list;
         addMyselfToList(list);
         return list;
@@ -103,7 +98,7 @@ std::list<SimulationTier> FirstSimulationTier::diveInto()
         auto max_result = -1;
         std::list<SimulationTier> bestList;
 
-        for (double u = 0; u <= 1; u += FirstSimulationTier::simConstants.stepU){
+        for (double u = 0; u <= 1; u += FST::simConstants->stepU){
             //produce next tier with its results
             auto nextTier = SimulationTier(*this, u);
             //but it only produce next level tier and nothing more

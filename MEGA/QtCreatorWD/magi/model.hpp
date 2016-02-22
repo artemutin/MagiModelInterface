@@ -76,10 +76,10 @@ struct FirstSimulationTier {
     int tier;//what tier of simulation it is
     double result;//result of the tier - summary production, or whatever;
 
-    static SimulationConstants simConstants;
-    static CapitalFunction capitalFunction;
-    static ProductionFunction productionFunction;
-    static CostFunction costFunction;
+    std::shared_ptr<SimulationConstants> simConstants;
+    std::shared_ptr<CapitalFunction> capitalFunction;
+    std::shared_ptr<ProductionFunction> productionFunction;
+    std::shared_ptr<CostFunction> costFunction;
 
     std::list<SimulationTier> diveInto();
     //polymorfic hack for adding to queue list
@@ -88,8 +88,15 @@ struct FirstSimulationTier {
     double computeResult(const FirstSimulationTier& prevRes);
 
     FirstSimulationTier(const double production, const double capital, const Proportion prop,
-                        double result, int tier = 0):production(production), capital(capital), proportion(prop),
-                        tier(tier), result(result){}
+                        double result, int tier,
+                        std::shared_ptr<SimulationConstants> simConstants,
+                        std::shared_ptr<CapitalFunction> capitalFunction,
+                        std::shared_ptr<ProductionFunction> productionFunction,
+                        std::shared_ptr<CostFunction> costFunction):
+                        production(production), capital(capital), proportion(prop),
+                        tier(tier), result(result), simConstants(simConstants),
+                        capitalFunction(capitalFunction), productionFunction(productionFunction),
+                        costFunction(costFunction){}
     FirstSimulationTier(){}
 };
 
