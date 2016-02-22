@@ -75,6 +75,9 @@ struct CostFunction {
     double operator() (const double& controlParameter, const double& production) const;
 };
 
+typedef std::list<SimulationTier> Result;
+typedef std::shared_ptr<Result> ResultPtr;
+
 struct FirstSimulationTier {
     double production, capital;//current production and capital
     Proportion proportion;
@@ -86,9 +89,9 @@ struct FirstSimulationTier {
     std::shared_ptr<ProductionFunction> productionFunction;
     std::shared_ptr<CostFunction> costFunction;
 
-    std::list<SimulationTier> diveInto();
+    ResultPtr diveInto();
     //polymorfic hack for adding to queue list
-    virtual void addMyselfToList(std::list<SimulationTier>& ref );
+    virtual void addMyselfToList(ResultPtr ref );
 
     double computeResult(const FirstSimulationTier& prevRes);
 
@@ -108,7 +111,7 @@ struct SimulationTier: public FirstSimulationTier{
 
     SimulationTier(const FirstSimulationTier& prev, double controlParameter);
 
-    virtual void addMyselfToList(std::list<SimulationTier>& ref );
+    virtual void addMyselfToList(ResultPtr ref);
 };
 typedef SimulationTier ST;
 

@@ -83,33 +83,33 @@ SimulationTier::SimulationTier(const FirstSimulationTier &prev, double controlPa
     result = FirstSimulationTier::computeResult(prev);
 }
 
-void SimulationTier::addMyselfToList(std::list<SimulationTier> &ref)
+void SimulationTier::addMyselfToList(ResultPtr ref)
 {
-    ref.push_back(*this);
+    ref->push_back(*this);
 }
 
-std::list<SimulationTier> FirstSimulationTier::diveInto()
+ResultPtr FirstSimulationTier::diveInto()
 {
     std::cout << "In tier:" << tier << std::endl;
     if (tier == FST::simConstants->numEpochs){
-        std::list<SimulationTier> list;
+        ResultPtr list = ResultPtr(new Result);
         addMyselfToList(list);
         return list;
     }else{
         auto max_result = -1;
-        std::list<SimulationTier> bestList;
+        ResultPtr bestList;
 
         for (double u = 0; u <= 1; u += FST::simConstants->stepU){
             //produce next tier with its results
             auto nextTier = SimulationTier(*this, u);
             //but it only produce next level tier and nothing more
             //then we need to dive into further recursion deep, to reach the end
-            std::list<SimulationTier> retList = nextTier.diveInto();
+            auto retList = nextTier.diveInto();
             //after floating, we got list with path from bottom to current tier
             //so, if it is best result, that we had, remember it to pass up in callstack
-            if (retList.front().result > max_result){
+            if (retList->front().result > max_result){
                 bestList = retList;
-                max_result = retList.front().result;
+                max_result = retList->front().result;
             }
         }
 
@@ -120,7 +120,7 @@ std::list<SimulationTier> FirstSimulationTier::diveInto()
     }
 }
 
-void FirstSimulationTier::addMyselfToList(std::list<SimulationTier> &ref)
+void FirstSimulationTier::addMyselfToList(ResultPtr ref)
 {
 }
 

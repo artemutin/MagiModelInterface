@@ -2,7 +2,7 @@
 #define MAINWINDOW_HPP
 
 #include <QMainWindow>
-#include <QRegExpValidator>
+#include "model.hpp"
 
 namespace Ui {
 class MainWindow;
@@ -19,6 +19,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    ResultPtr result;
 private slots:
     void buttonClicked();
 };
