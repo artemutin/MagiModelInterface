@@ -2,6 +2,7 @@
 #define MAINWINDOW_HPP
 
 #include <QMainWindow>
+#include <QRegExpValidator>
 
 namespace Ui {
 class MainWindow;
@@ -13,10 +14,13 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
+
     ~MainWindow();
 
 private:
     Ui::MainWindow *ui;
+private slots:
+    void buttonClicked();
 };
 
 #endif // MAINWINDOW_HPP

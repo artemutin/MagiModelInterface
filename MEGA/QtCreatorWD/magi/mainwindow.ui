@@ -57,14 +57,14 @@
           </widget>
          </item>
          <item row="1" column="1">
-          <widget class="QSpinBox" name="spinBox">
+          <widget class="QSpinBox" name="nEpochsSpinBox">
            <property name="maximum">
             <number>10</number>
            </property>
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QDoubleSpinBox" name="doubleSpinBox">
+          <widget class="QDoubleSpinBox" name="stepUSpinBox">
            <property name="maximum">
             <double>1.000000000000000</double>
            </property>
@@ -122,28 +122,45 @@
                </property>
               </widget>
              </item>
-             <item row="0" column="1">
-              <widget class="QLineEdit" name="lineEdit_2"/>
-             </item>
-             <item row="1" column="1">
-              <widget class="QLineEdit" name="lineEdit_3"/>
-             </item>
-             <item row="1" column="0">
+             <item row="2" column="0">
               <widget class="QLabel" name="label_5">
                <property name="text">
                 <string>p1</string>
                </property>
               </widget>
              </item>
-             <item row="2" column="0">
+             <item row="3" column="0">
               <widget class="QLabel" name="label_6">
                <property name="text">
                 <string>p2</string>
                </property>
               </widget>
              </item>
+             <item row="0" column="1">
+              <widget class="QSpinBox" name="regASpinBox"/>
+             </item>
              <item row="2" column="1">
-              <widget class="QLineEdit" name="lineEdit_4"/>
+              <widget class="QDoubleSpinBox" name="regP1SpinBox">
+               <property name="suffix">
+                <string/>
+               </property>
+               <property name="maximum">
+                <double>2.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.010000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QDoubleSpinBox" name="regP2SpinBox">
+               <property name="maximum">
+                <double>2.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.010000000000000</double>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>
@@ -159,8 +176,8 @@
              <rect>
               <x>-1</x>
               <y>19</y>
-              <width>291</width>
-              <height>191</height>
+              <width>281</width>
+              <height>171</height>
              </rect>
             </property>
             <layout class="QFormLayout" name="formLayout_3">
@@ -185,24 +202,12 @@
                </property>
               </widget>
              </item>
-             <item row="0" column="1">
-              <widget class="QLineEdit" name="lineEdit_5"/>
-             </item>
-             <item row="1" column="1">
-              <widget class="QLineEdit" name="lineEdit_6"/>
-             </item>
-             <item row="2" column="1">
-              <widget class="QLineEdit" name="lineEdit_7"/>
-             </item>
              <item row="3" column="0">
               <widget class="QLabel" name="label_10">
                <property name="text">
                 <string>Объем заготовки</string>
                </property>
               </widget>
-             </item>
-             <item row="3" column="1">
-              <widget class="QLineEdit" name="lineEdit_8"/>
              </item>
              <item row="4" column="0">
               <widget class="QLabel" name="label_11">
@@ -211,8 +216,44 @@
                </property>
               </widget>
              </item>
+             <item row="0" column="1">
+              <widget class="QDoubleSpinBox" name="deltaSpinBox">
+               <property name="maximum">
+                <double>1.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.010000000000000</double>
+               </property>
+               <property name="value">
+                <double>0.950000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QDoubleSpinBox" name="savingSpinBox">
+               <property name="maximum">
+                <double>1.000000000000000</double>
+               </property>
+               <property name="singleStep">
+                <double>0.010000000000000</double>
+               </property>
+               <property name="value">
+                <double>0.200000000000000</double>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QSpinBox" name="exportSpinBox">
+               <property name="maximum">
+                <number>100000</number>
+               </property>
+              </widget>
+             </item>
              <item row="4" column="1">
-              <widget class="QLineEdit" name="lineEdit_9"/>
+              <widget class="QDoubleSpinBox" name="CostSpinBox"/>
+             </item>
+             <item row="3" column="1">
+              <widget class="QSpinBox" name="woodProductionSpinBox"/>
              </item>
             </layout>
            </widget>
@@ -267,10 +308,10 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QLineEdit" name="lineEdit_12"/>
+            <widget class="QSpinBox" name="capitalSpinBox"/>
            </item>
            <item row="1" column="1">
-            <widget class="QLineEdit" name="lineEdit_13"/>
+            <widget class="QSpinBox" name="ProductionSpinBox"/>
            </item>
           </layout>
          </widget>
@@ -313,13 +354,37 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QLineEdit" name="lineEdit"/>
+            <widget class="QDoubleSpinBox" name="aSpinBox">
+             <property name="maximum">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.010000000000000</double>
+             </property>
+            </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QLineEdit" name="lineEdit_10"/>
+            <widget class="QDoubleSpinBox" name="bSpinBox">
+             <property name="maximum">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.010000000000000</double>
+             </property>
+            </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QLineEdit" name="lineEdit_11"/>
+            <widget class="QDoubleSpinBox" name="xSpinBox">
+             <property name="maximum">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.010000000000000</double>
+             </property>
+             <property name="value">
+              <double>0.300000000000000</double>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -359,5 +424,25 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>buttonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>294</x>
+     <y>674</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>572</x>
+     <y>356</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>buttonClicked()</slot>
+ </slots>
 </ui>
