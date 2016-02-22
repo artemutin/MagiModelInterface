@@ -17,6 +17,7 @@ private Q_SLOTS:
     void proportion();
     void costFunction();
     void firstSimulationTier();
+    void compareToOMP();
 };
 
 
@@ -79,6 +80,18 @@ void MagiTest::firstSimulationTier()
               simulationConstants, capitalFunction, productionFunction, costFunction);
     auto best = start->diveInto();
     int i = 32;
+}
+
+void MagiTest::compareToOMP()
+{
+    auto simulationConstants = std::make_shared<SimulationConstants>(0.1, 4);
+    auto capitalFunction  = std::make_shared<CapitalFunction>(0.95, 0.2);
+    auto productionFunction  = std::make_shared<ProductionFunction>(100, 0.7, 0.3, 80, 1e5);
+    auto costFunction  = std::make_shared<CostFunction>(1000, 0.2);
+
+    FST* start = new FST(1e6, 1e5, Proportion::makeNewProportionFromAX(0.5, 0.3), 0, 0,
+              simulationConstants, capitalFunction, productionFunction, costFunction);
+    QCOMPARE(start->diveInto(), start->diveIntoOpenMP());
 }
 
 QTEST_APPLESS_MAIN(MagiTest)

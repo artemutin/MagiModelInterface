@@ -87,6 +87,7 @@ struct FirstSimulationTier {
     std::shared_ptr<CostFunction> costFunction;
 
     std::list<SimulationTier> diveInto();
+    std::list<SimulationTier> diveIntoOpenMP();
     //polymorfic hack for adding to queue list
     virtual void addMyselfToList(std::list<SimulationTier>& ref );
 
@@ -109,6 +110,7 @@ struct SimulationTier: public FirstSimulationTier{
     SimulationTier(const FirstSimulationTier& prev, double controlParameter);
 
     virtual void addMyselfToList(std::list<SimulationTier>& ref );
+    bool operator ==(const SimulationTier& a) const;
 };
 typedef SimulationTier ST;
 

@@ -18,3 +18,5 @@ TEMPLATE = app
 SOURCES += tst_magitest.cpp \
     ../magi/model.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
+QMAKE_CXXFLAGS += -fopenmp
+LIBS += -L /usr/lib -lgomp

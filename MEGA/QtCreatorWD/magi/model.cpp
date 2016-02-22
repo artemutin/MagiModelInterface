@@ -88,6 +88,11 @@ void SimulationTier::addMyselfToList(std::list<SimulationTier> &ref)
     ref.push_back(*this);
 }
 
+bool SimulationTier::operator ==(const SimulationTier &a) const
+{
+    return a.result == result;
+}
+
 std::list<SimulationTier> FirstSimulationTier::diveInto()
 {
     std::cout << "In tier:" << tier << std::endl;
@@ -110,6 +115,45 @@ std::list<SimulationTier> FirstSimulationTier::diveInto()
             if (retList.front().result > max_result){
                 bestList = retList;
                 max_result = retList.front().result;
+            }
+        }
+
+        //finally, with best result, we pass our list further,
+        //and dont forget to add themselves to it
+        addMyselfToList(bestList);
+        return bestList;
+    }
+}
+
+std::list<SimulationTier> FirstSimulationTier::diveIntoOpenMP()
+{
+    std::cout << "In tier:" << tier << std::endl;
+    if (tier == FST::simConstants->numEpochs){
+        std::list<SimulationTier> list;
+        addMyselfToList(list);
+        return list;
+    }else{
+        auto max_result = -1;
+        std::list<SimulationTier> bestList;
+
+        int n_iter = std::floor(1.0/FST::simConstants->stepU) + 1;
+
+        #pragma omp declare reduction (max_result : std::list<SimulationTier> \
+            : omp_out = omp_in )
+
+         #pragma omp parallel for reduction(max_result : bestList)
+        for (int i = 0; i <= n_iter; i++){
+            auto u = simConstants->stepU*i;
+            //produce next tier with its results
+            auto nextTier = SimulationTier(*this, u);
+            //but it only produce next level tier and nothing more
+            //then we need to dive into further recursion deep, to reach the end
+            std::list<SimulationTier> retList = nextTier.diveInto();
+            //after floating, we got list with path from bottom to current tier
+            //so, if it is best result, that we had, remember it to pass up in callstack
+            if (retList.front().result > bestList.front().result){
+                bestList = retList;
+                //max_result = retList.front().result;
             }
         }
 
