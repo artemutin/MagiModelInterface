@@ -1,5 +1,7 @@
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
+#include "ui_outputresultform.h"
+#include "outputresultform.hpp"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -25,4 +27,7 @@ void MainWindow::buttonClicked()
                          Proportion::makeNewProportionFromAX(ui->aSpinBox->value(), ui->bSpinBox->value()), 0, 0,
               simulationConstants, capitalFunction, productionFunction, costFunction);
     result = start->diveInto();
+    outputForm = std::shared_ptr<::OutputResultForm> (new ::OutputResultForm() );
+    connect(this, SIGNAL( modelEvaluated() ), outputForm.get(), SLOT(show() ) );
+    emit modelEvaluated();
  }

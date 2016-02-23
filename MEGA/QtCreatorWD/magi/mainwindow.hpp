@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "model.hpp"
+#include "outputresultform.hpp"
 
 namespace Ui {
 class MainWindow;
@@ -19,9 +20,12 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    std::shared_ptr<OutputResultForm> outputForm;
     ResultPtr result;
 private slots:
     void buttonClicked();
+signals:
+    void modelEvaluated();
 };
 
 #endif // MAINWINDOW_HPP

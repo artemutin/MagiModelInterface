@@ -14,11 +14,14 @@ TEMPLATE = app
 
 SOURCES += mainwindow.cpp \
     model.cpp \
-    main.cpp
+    main.cpp \
+    outputresultform.cpp
 
 HEADERS  += mainwindow.hpp \
-    model.hpp
+    model.hpp \
+    outputresultform.hpp
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    outputresultform.ui
 
 CONFIG += c++14
