@@ -15,11 +15,13 @@ TEMPLATE = app
 SOURCES += mainwindow.cpp \
     model.cpp \
     main.cpp \
-    outputresultform.cpp
+    outputresultform.cpp \
+    resultmodel.cpp
 
 HEADERS  += mainwindow.hpp \
     model.hpp \
-    outputresultform.hpp
+    outputresultform.hpp \
+    resultmodel.hpp
 
 FORMS    += mainwindow.ui \
     outputresultform.ui
