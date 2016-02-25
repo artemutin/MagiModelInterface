@@ -24,7 +24,7 @@ void MainWindow::buttonClicked()
     auto costFunction  = std::make_shared<CostFunction>(ui->CostSpinBox->value(), ui->savingSpinBox->value());
 
     FST* start = new FST(ui->ProductionSpinBox->value(), ui->capitalSpinBox->value(),
-                         Proportion::makeNewProportionFromAX(ui->aSpinBox->value(), ui->bSpinBox->value()), 0, 0,
+                         Proportion::makeNewProportionFromAX(ui->aSpinBox->value(), ui->xSpinBox->value()), 0, 0,
               simulationConstants, capitalFunction, productionFunction, costFunction);
     result = start->diveInto();
     outputForm = std::shared_ptr<::OutputResultForm> (new ::OutputResultForm() );

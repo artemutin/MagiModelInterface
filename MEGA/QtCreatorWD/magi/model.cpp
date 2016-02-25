@@ -90,7 +90,7 @@ void SimulationTier::addMyselfToList(ResultPtr ref)
 
 ResultPtr FirstSimulationTier::diveInto()
 {
-    std::cout << "In tier:" << tier << std::endl;
+    //std::cout << "In tier:" << tier << std::endl;
     if (tier == FST::simConstants->numEpochs){
         ResultPtr list = ResultPtr(new Result);
         addMyselfToList(list);
