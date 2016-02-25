@@ -23,15 +23,15 @@ public:
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
     enum Columns {
+        tier,
+        controlParameter,
+        x,
+        result,
         production,
         capital,
         a,
         b,
-        x,
-        result,
-        tier,
-        alpha,
-        controlParameter
+        alpha
     };
 
 };

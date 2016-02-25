@@ -27,3 +27,4 @@ FORMS    += mainwindow.ui \
     outputresultform.ui
 
 CONFIG += c++14
+QMAKE_CXXFLAGS_RELEASE += -O3
