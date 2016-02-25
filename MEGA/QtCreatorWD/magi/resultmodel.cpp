@@ -56,3 +56,27 @@ QVariant ResultModel::data(const QModelIndex &index, int role) const
         default: return QVariant();
     }
 }
+
+
+QVariant ResultModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    if (orientation == Qt::Horizontal) {
+        switch(section){
+            case Columns::production: return QVariant("ВВП отрасли");
+            case Columns::capital: return QVariant("Капитал");
+            case Columns::a: return QVariant("а");
+            case Columns::b: return QVariant("b");
+            case Columns::x: return QVariant("x");
+            case Columns::result: return QVariant("Целевая ф-ция");
+            case Columns::tier: return QVariant("Этап");
+            case Columns::alpha: return QVariant("\u03B1");
+            case Columns::controlParameter: return QVariant("u");
+            default: return QVariant();
+        }
+    }
+
+    return QVariant();
+}
