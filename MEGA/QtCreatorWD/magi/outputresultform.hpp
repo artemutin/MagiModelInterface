@@ -17,7 +17,6 @@ class OutputResultForm :  public QWidget
 public:
     explicit OutputResultForm(QWidget *parent = 0);
     ~OutputResultForm();
-    QListView* getListView();
 public slots:
     void addResult(ResultModel* );
 
