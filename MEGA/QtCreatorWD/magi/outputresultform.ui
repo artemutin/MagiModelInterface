@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>713</width>
+    <height>699</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,6 +24,16 @@
    </property>
    <property name="text">
     <string/>
+   </property>
+  </widget>
+  <widget class="QListView" name="listView">
+   <property name="geometry">
+    <rect>
+     <x>25</x>
+     <y>11</y>
+     <width>541</width>
+     <height>671</height>
+    </rect>
    </property>
   </widget>
  </widget>

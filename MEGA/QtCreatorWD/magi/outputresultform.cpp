@@ -12,3 +12,13 @@ OutputResultForm::~OutputResultForm()
 {
     delete ui;
 }
+
+QListView *OutputResultForm::getListView()
+{
+    return ui->listView;
+}
+
+void OutputResultForm::addResult(ResultModel * model)
+{
+    ui->listView->setModel(model);
+}

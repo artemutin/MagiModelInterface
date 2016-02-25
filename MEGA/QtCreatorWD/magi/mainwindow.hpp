@@ -25,7 +25,7 @@ private:
 private slots:
     void buttonClicked();
 signals:
-    void modelEvaluated();
+    void modelEvaluated(ResultModel*);
 };
 
 #endif // MAINWINDOW_HPP

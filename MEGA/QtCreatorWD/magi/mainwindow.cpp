@@ -28,6 +28,8 @@ void MainWindow::buttonClicked()
               simulationConstants, capitalFunction, productionFunction, costFunction);
     result = start->diveInto();
     outputForm = std::shared_ptr<::OutputResultForm> (new ::OutputResultForm() );
-    connect(this, SIGNAL( modelEvaluated() ), outputForm.get(), SLOT(show() ) );
-    emit modelEvaluated();
+    connect(this, SIGNAL( modelEvaluated(ResultModel* ) ), outputForm.get(), SLOT(show() ) );
+    connect(this, SIGNAL( modelEvaluated(ResultModel*) ), outputForm.get(), SLOT(addResult(ResultModel*) ) );
+    auto model = new ResultModel(result);
+    emit modelEvaluated(model);
  }

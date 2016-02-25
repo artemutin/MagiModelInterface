@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QObject>
+#include <QListView>
+#include "resultmodel.hpp"
 
 namespace Ui {
 class OutputResultForm;
@@ -15,6 +17,9 @@ class OutputResultForm :  public QWidget
 public:
     explicit OutputResultForm(QWidget *parent = 0);
     ~OutputResultForm();
+    QListView* getListView();
+public slots:
+    void addResult(ResultModel* );
 
 private:
     Ui::OutputResultForm *ui;
