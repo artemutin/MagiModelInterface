@@ -1,6 +1,17 @@
 #include "resultmodel.hpp"
 #include "common_constants.hpp"
 
+constexpr Consts::Columns ResultModel::columns[];
+
+std::map<int, Consts::Columns> ResultModel::columnByInt = [](){
+    int i = -1;
+    std::map<int, Consts::Columns> ret;
+    for (auto en : ResultModel::columns){
+        ret.insert({++i, en});
+    }
+    return ret;
+}();
+
 ResultModel::ResultModel(ResultPtr tiers):tiers(tiers)
 {
 
@@ -35,7 +46,7 @@ int ResultModel::columnCount(const QModelIndex &parent) const
 }
 
 QVariant ResultModel::data(const QModelIndex &index, int role) const
-{
+{using namespace Consts;
     if (!index.isValid())
             return QVariant();
 
@@ -43,9 +54,9 @@ QVariant ResultModel::data(const QModelIndex &index, int role) const
             return QVariant();
 
     auto model = static_cast<SimulationTier *> (index.internalPointer());
+    auto colEnum = columnByInt.find(index.column())->second;
 
-    using namespace Consts;
-    switch(index.column()){
+    switch(colEnum){
         case Columns::production: return QVariant(model->production);
         case Columns::capital: return QVariant(model->capital);
         case Columns::a: return QVariant(model->proportion.a);
@@ -61,24 +72,17 @@ QVariant ResultModel::data(const QModelIndex &index, int role) const
 
 
 QVariant ResultModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
+{using namespace Consts;
     if (role != Qt::DisplayRole)
         return QVariant();
 
-    using namespace Consts;
+
+
     if (orientation == Qt::Horizontal) {
-        switch(section){
-            case Columns::production: return QVariant("ВВП отрасли");
-            case Columns::capital: return QVariant("Капитал");
-            case Columns::a: return QVariant("а");
-            case Columns::b: return QVariant("b");
-            case Columns::x: return QVariant("x");
-            case Columns::result: return QVariant("Целевая ф-ция");
-            case Columns::tier: return QVariant("Этап");
-            case Columns::alpha: return QVariant("\u03B1");
-            case Columns::controlParameter: return QVariant("u");
-            default: return QVariant();
-        }
+        auto colEnum = columnByInt.find(section)->second;
+        QString label = Labels.find(colEnum)->second;
+
+        return QVariant(label);
     }
 
     return QVariant();

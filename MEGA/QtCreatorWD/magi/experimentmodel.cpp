@@ -96,7 +96,7 @@ QVariant ExperimentModel::headerData(int section, Qt::Orientation orientation, i
 
     if (orientation == Qt::Horizontal) {
         auto colEnum = columnByInt.find(section)->second;
-        auto label = Labels.find(colEnum)->second;
+        QString label = Labels.find(colEnum)->second;
 
         return QVariant(label);
     }

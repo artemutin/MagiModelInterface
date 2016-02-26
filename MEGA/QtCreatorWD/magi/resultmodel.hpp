@@ -3,6 +3,7 @@
 
 #include <QAbstractItemModel>
 #include "model.hpp"
+#include "common_constants.hpp"
 
 //this class represents full chain of parameters-tiers simulation values
 class ResultModel : public QAbstractItemModel
@@ -12,6 +13,19 @@ class ResultModel : public QAbstractItemModel
     ResultPtr tiers;
     static const int NCOLS = 9;
 
+    static constexpr Consts::Columns columns[] = {
+        Consts::production,
+        Consts::capital,
+        Consts::a,
+        Consts::b,
+        Consts::x,
+        Consts::result,
+        Consts::tier,
+        Consts::alpha,
+        Consts::controlParameter
+    };
+
+    static std::map<int, Consts::Columns> columnByInt;
 public:
     ResultModel(ResultPtr tiers);
 
