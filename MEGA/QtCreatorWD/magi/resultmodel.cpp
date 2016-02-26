@@ -1,4 +1,5 @@
 #include "resultmodel.hpp"
+#include "common_constants.hpp"
 
 ResultModel::ResultModel(ResultPtr tiers):tiers(tiers)
 {
@@ -43,6 +44,7 @@ QVariant ResultModel::data(const QModelIndex &index, int role) const
 
     auto model = static_cast<SimulationTier *> (index.internalPointer());
 
+    using namespace Consts;
     switch(index.column()){
         case Columns::production: return QVariant(model->production);
         case Columns::capital: return QVariant(model->capital);
@@ -63,6 +65,7 @@ QVariant ResultModel::headerData(int section, Qt::Orientation orientation, int r
     if (role != Qt::DisplayRole)
         return QVariant();
 
+    using namespace Consts;
     if (orientation == Qt::Horizontal) {
         switch(section){
             case Columns::production: return QVariant("ВВП отрасли");

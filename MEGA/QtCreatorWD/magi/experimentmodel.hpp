@@ -3,6 +3,7 @@
 
 #include <QAbstractItemModel>
 #include "model.hpp"
+#include "common_constants.hpp"
 
 class ExperimentModel : public QAbstractItemModel
 {
@@ -15,30 +16,33 @@ class ExperimentModel : public QAbstractItemModel
         done
     };
 
+
     struct ExperimentParams{
         std::shared_ptr<FST> initialConditions;
         ExperimentStatus status;
     };
 
-    enum Columns {
-        status,
-        stepU,
-        nTiers,
-        delta,
-        savings,
-        regA,
-        regP1,
-        regP2,
-        woodProduction,
-        exportCost,
-        cost,
-        x,
-        result,
-        production,
-        capital,
-        a,
-        b,
-    };
+    static constexpr Consts::Columns columns[] = {
+           Consts::status,
+           Consts::stepU,
+           Consts::nTiers,
+           Consts::delta,
+           Consts::savings,
+           Consts::regA,
+           Consts::regP1,
+           Consts::regP2,
+           Consts::woodProduction,
+           Consts::exportCost,
+           Consts::cost,
+           Consts::x,
+           Consts::result,
+           Consts::production,
+           Consts::capital,
+           Consts::a,
+           Consts::b,
+        };
+
+    static std::map<int, Consts::Columns> columnByInt;
 
     std::vector<ExperimentParams> experiments;
     static constexpr int NCOLS = 1 + 2 + 2 + 5 + 1;

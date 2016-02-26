@@ -1,5 +1,16 @@
 #include "experimentmodel.hpp"
 
+constexpr Consts::Columns ExperimentModel::columns[];
+
+std::map<int, Consts::Columns> ExperimentModel::columnByInt = [](){
+    int i = -1;
+    std::map<int, Consts::Columns> ret;
+    for (auto en : ExperimentModel::columns){
+        ret.insert({++i, en});
+    }
+    return ret;
+}();
+
 ExperimentModel::ExperimentModel()
 {
 
@@ -43,7 +54,9 @@ QVariant ExperimentModel::data(const QModelIndex &index, int role) const
     auto params = static_cast<const ExperimentParams *> (&(experiments[index.row()]) );
     auto model = params->initialConditions;
 
-    switch(index.column()){
+    using namespace Consts;
+    auto colEnum = columnByInt.find(index.column());
+    switch(colEnum->second){
         case Columns::production: return QVariant(model->production);
         case Columns::capital: return QVariant(model->capital);
         case Columns::a: return QVariant(model->proportion.a);
@@ -65,6 +78,7 @@ QVariant ExperimentModel::data(const QModelIndex &index, int role) const
                                 case notStarted: return "not started";
                                 case inProgress: return "in progress";
                                  case done: return "done";
+                                default: return "not started";
                                 }
                     }()
         );
@@ -75,11 +89,16 @@ QVariant ExperimentModel::data(const QModelIndex &index, int role) const
 
 QVariant ExperimentModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
+    using namespace   Consts;
     if (role != Qt::DisplayRole)
         return QVariant();
 
-    if (orientation == Qt::Horizontal) {
 
+    if (orientation == Qt::Horizontal) {
+        auto colEnum = columnByInt.find(section)->second;
+        auto label = Labels.find(colEnum)->second;
+
+        return QVariant(label);
     }
 
     return QVariant();

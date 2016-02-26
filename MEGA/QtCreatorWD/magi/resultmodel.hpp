@@ -21,19 +21,7 @@ public:
     virtual int rowCount(const QModelIndex &parent) const;
     virtual int columnCount(const QModelIndex &parent) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-
-    enum Columns {
-        tier,
-        controlParameter,
-        x,
-        result,
-        production,
-        capital,
-        a,
-        b,
-        alpha
-    };
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const; 
 
 };
 

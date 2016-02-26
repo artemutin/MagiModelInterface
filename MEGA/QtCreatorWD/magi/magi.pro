@@ -23,7 +23,8 @@ HEADERS  += mainwindow.hpp \
     model.hpp \
     outputresultform.hpp \
     resultmodel.hpp \
-    experimentmodel.hpp
+    experimentmodel.hpp \
+    common_constants.hpp
 
 FORMS    += mainwindow.ui \
     outputresultform.ui
