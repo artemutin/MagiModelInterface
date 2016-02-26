@@ -16,12 +16,14 @@ SOURCES += mainwindow.cpp \
     model.cpp \
     main.cpp \
     outputresultform.cpp \
-    resultmodel.cpp
+    resultmodel.cpp \
+    experimentmodel.cpp
 
 HEADERS  += mainwindow.hpp \
     model.hpp \
     outputresultform.hpp \
-    resultmodel.hpp
+    resultmodel.hpp \
+    experimentmodel.hpp
 
 FORMS    += mainwindow.ui \
     outputresultform.ui

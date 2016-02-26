@@ -4,6 +4,7 @@
 #include <QAbstractItemModel>
 #include "model.hpp"
 
+//this class represents full chain of parameters-tiers simulation values
 class ResultModel : public QAbstractItemModel
 {
     Q_OBJECT
