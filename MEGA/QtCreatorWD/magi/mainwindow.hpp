@@ -25,7 +25,7 @@ private:
 private slots:
     void buttonClicked();
 signals:
-    void modelEvaluated(ResultModel*);
+    void initialValuesEntered(std::shared_ptr<FST> initialConditions);
 };
 
 #endif // MAINWINDOW_HPP

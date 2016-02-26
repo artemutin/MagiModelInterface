@@ -76,8 +76,6 @@ QVariant ResultModel::headerData(int section, Qt::Orientation orientation, int r
     if (role != Qt::DisplayRole)
         return QVariant();
 
-
-
     if (orientation == Qt::Horizontal) {
         auto colEnum = columnByInt.find(section)->second;
         QString label = Labels.find(colEnum)->second;

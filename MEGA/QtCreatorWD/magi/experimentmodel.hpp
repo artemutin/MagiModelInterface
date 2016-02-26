@@ -4,6 +4,7 @@
 #include <QAbstractItemModel>
 #include "model.hpp"
 #include "common_constants.hpp"
+#include "resultmodel.hpp"
 
 class ExperimentModel : public QAbstractItemModel
 {
@@ -16,7 +17,9 @@ class ExperimentModel : public QAbstractItemModel
         done
     };
 
-
+    //if we will use threads for computations, it means
+    //that it should be appropriate QObject with signals,
+    //mb thread support built-in
     struct ExperimentParams{
         std::shared_ptr<FST> initialConditions;
         ExperimentStatus status;
@@ -60,6 +63,13 @@ public:
     // QAbstractItemModel interface
 public:
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    virtual bool insertRows(int row, int count, const QModelIndex &parent);
+public slots:
+    void startExperiment(std::shared_ptr<FST> initialConditions);
+signals:
+    void modelEvaluated(std::shared_ptr<ResultModel>);
+
+
 };
 
 #endif // EXPERIMENTMODEL_HPP

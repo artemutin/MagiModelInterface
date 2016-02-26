@@ -1,4 +1,5 @@
 #include "experimentmodel.hpp"
+#include "ui_outputresultform.h"
 
 constexpr Consts::Columns ExperimentModel::columns[];
 
@@ -102,4 +103,19 @@ QVariant ExperimentModel::headerData(int section, Qt::Orientation orientation, i
     }
 
     return QVariant();
+}
+
+void ExperimentModel::startExperiment(std::shared_ptr<FST> initialConditions)
+{
+    auto result = initialConditions->diveInto();
+    outputForm = std::shared_ptr<OutputResultForm> (new OutputResultForm() );
+    connect(this, SIGNAL( modelEvaluated(ResultModel* ) ), outputForm.get(), SLOT(show() ) );
+    connect(this, SIGNAL( modelEvaluated(ResultModel*) ), outputForm.get(), SLOT(addResult(ResultModel*) ) );
+    auto model = std::make_shared<ResultModel>(result);
+    emit modelEvaluated(model);
+}
+
+
+bool ExperimentModel::insertRows(int row, int count, const QModelIndex &parent)
+{
 }

@@ -23,13 +23,8 @@ void MainWindow::buttonClicked()
                                                                     ui->regP2SpinBox->value(), ui->exportSpinBox->value(), ui->woodProductionSpinBox->value());
     auto costFunction  = std::make_shared<CostFunction>(ui->CostSpinBox->value(), ui->savingSpinBox->value());
 
-    FST* start = new FST(ui->ProductionSpinBox->value(), ui->capitalSpinBox->value(),
+    auto initialConditions = std::make_shared<FST>(ui->ProductionSpinBox->value(), ui->capitalSpinBox->value(),
                          Proportion::makeNewProportionFromAX(ui->aSpinBox->value(), ui->xSpinBox->value()), 0, 0,
               simulationConstants, capitalFunction, productionFunction, costFunction);
-    result = start->diveInto();
-    outputForm = std::shared_ptr<::OutputResultForm> (new ::OutputResultForm() );
-    connect(this, SIGNAL( modelEvaluated(ResultModel* ) ), outputForm.get(), SLOT(show() ) );
-    connect(this, SIGNAL( modelEvaluated(ResultModel*) ), outputForm.get(), SLOT(addResult(ResultModel*) ) );
-    auto model = new ResultModel(result);
-    emit modelEvaluated(model);
+    emit initialValuesEntered(initialConditions);
  }

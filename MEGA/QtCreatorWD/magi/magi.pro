@@ -17,17 +17,21 @@ SOURCES += mainwindow.cpp \
     main.cpp \
     outputresultform.cpp \
     resultmodel.cpp \
-    experimentmodel.cpp
+    experimentmodel.cpp \
+    experiments_results.cpp
 
 HEADERS  += mainwindow.hpp \
     model.hpp \
     outputresultform.hpp \
     resultmodel.hpp \
     experimentmodel.hpp \
-    common_constants.hpp
+    common_constants.hpp \
+    experiments_results.hpp
 
 FORMS    += mainwindow.ui \
-    outputresultform.ui
+    outputresultform.ui \
+    experiment_results.ui \
+    experiments_results.ui
 
 CONFIG += c++14
 QMAKE_CXXFLAGS_RELEASE += -O3
