@@ -58,7 +58,16 @@ QVariant ExperimentModel::data(const QModelIndex &index, int role) const
         case Columns::regP1: return  QVariant(model->productionFunction->rf.p1);
         case Columns::regP2: return  QVariant(model->productionFunction->rf.p2);
         case Columns::savings: return  QVariant(model->capitalFunction->savings);
-        case Columns::woodProduction: return  QVariant(model->productionFunction->woodProduction)	;
+        case Columns::woodProduction: return  QVariant(model->productionFunction->woodProduction);
+        case Columns::status: return QVariant(
+                    [params]() {
+                    switch(params->status){
+                                case notStarted: return "not started";
+                                case inProgress: return "in progress";
+                                 case done: return "done";
+                                }
+                    }()
+        );
         default: return QVariant();
     }
 }
