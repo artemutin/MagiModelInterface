@@ -9,15 +9,15 @@ class ExperimentModel : public QAbstractItemModel
 
     Q_OBJECT
 
-    struct ExperimentParams{
-        std::shared_ptr<FST> initialConditions;
-        ExperimentStatus status;
-    };
-
     enum ExperimentStatus {
         notStarted,
         inProgress,
         done
+    };
+
+    struct ExperimentParams{
+        std::shared_ptr<FST> initialConditions;
+        ExperimentStatus status;
     };
 
     enum Columns {
@@ -38,7 +38,6 @@ class ExperimentModel : public QAbstractItemModel
         capital,
         a,
         b,
-        alpha
     };
 
     std::vector<ExperimentParams> experiments;
@@ -53,7 +52,10 @@ public:
     virtual int rowCount(const QModelIndex &parent) const;
     virtual int columnCount(const QModelIndex &parent) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
-    virtual bool setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role);
+
+    // QAbstractItemModel interface
+public:
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 };
 
 #endif // EXPERIMENTMODEL_HPP

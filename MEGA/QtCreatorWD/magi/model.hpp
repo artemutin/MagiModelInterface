@@ -23,7 +23,7 @@ struct CapitalFunction {
 };
 
 //yet another inner model constants
-class RefactorFunction  {
+struct RefactorFunction  {
     double a;
     double p1;
     double p2;

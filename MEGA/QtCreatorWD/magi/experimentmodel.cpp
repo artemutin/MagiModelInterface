@@ -8,10 +8,12 @@ ExperimentModel::ExperimentModel()
 
 QModelIndex ExperimentModel::index(int row, int column, const QModelIndex &parent) const
 {
-    if (row > rowCount()-1 || column > columnCount() -1){
+    if (row > experiments.size()-1 || column > NCOLS -1){
         return QModelIndex();
     }else{
-        return createIndex(row, column, static_cast<void*> (experiments.at(row)) );
+        //HOLY COW, IT IS UGLY AS HELL, TODO SMTH WITH IT!!!
+        return createIndex(row, column,
+                           (void*) NULL );
     }
 }
 
@@ -38,7 +40,8 @@ QVariant ExperimentModel::data(const QModelIndex &index, int role) const
     if (role != Qt::DisplayRole)
             return QVariant();
 
-    auto model = static_cast<FST *> (index.internalPointer());
+    auto params = static_cast<const ExperimentParams *> (&(experiments[index.row()]) );
+    auto model = params->initialConditions;
 
     switch(index.column()){
         case Columns::production: return QVariant(model->production);
@@ -60,6 +63,15 @@ QVariant ExperimentModel::data(const QModelIndex &index, int role) const
     }
 }
 
-bool ExperimentModel::setHeaderData(int section, Qt::Orientation orientation, const QVariant &value, int role)
+
+QVariant ExperimentModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    if (orientation == Qt::Horizontal) {
+
+    }
+
+    return QVariant();
 }
