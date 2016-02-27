@@ -107,6 +107,12 @@ QVariant ExperimentModel::headerData(int section, Qt::Orientation orientation, i
 
 void ExperimentModel::startExperiment(std::shared_ptr<FST> initialConditions)
 {
+    //for now, i see it, as we create new ExperimentParams
+    //run FST in here, in other thread for best
+    //and insertRow it here.
+    //it should be added and displayed in table
+    //but, what about update of model?
+    //seems to me, we need to connect some signals
     auto result = initialConditions->diveInto();
     outputForm = std::shared_ptr<OutputResultForm> (new OutputResultForm() );
     connect(this, SIGNAL( modelEvaluated(ResultModel* ) ), outputForm.get(), SLOT(show() ) );
@@ -118,4 +124,6 @@ void ExperimentModel::startExperiment(std::shared_ptr<FST> initialConditions)
 
 bool ExperimentModel::insertRows(int row, int count, const QModelIndex &parent)
 {
+    //implement inserting of experiment results
+
 }
