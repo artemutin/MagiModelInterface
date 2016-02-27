@@ -30,7 +30,6 @@ HEADERS  += mainwindow.hpp \
 
 FORMS    += mainwindow.ui \
     outputresultform.ui \
-    experiment_results.ui \
     experiments_results.ui
 
 CONFIG += c++14

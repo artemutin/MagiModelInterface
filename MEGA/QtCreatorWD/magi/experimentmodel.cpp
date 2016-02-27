@@ -52,7 +52,7 @@ QVariant ExperimentModel::data(const QModelIndex &index, int role) const
     if (role != Qt::DisplayRole)
             return QVariant();
 
-    auto params = static_cast<const ExperimentParams *> (&(experiments[index.row()]) );
+    auto params = experiments[index.row()];
     auto model = params->initialConditions;
 
     using namespace Consts;
@@ -108,22 +108,44 @@ QVariant ExperimentModel::headerData(int section, Qt::Orientation orientation, i
 void ExperimentModel::startExperiment(std::shared_ptr<FST> initialConditions)
 {
     //for now, i see it, as we create new ExperimentParams
+    auto newExperiment = new ExperimentParams(initialConditions, notStarted, this);
     //run FST in here, in other thread for best
+    connect(this, SIGNAL(startComputation()), newExperiment, SLOT(startComputation()));
     //and insertRow it here.
+    insertRow(rowCount(QModelIndex()), createIndex(0, 0, newExperiment ) );
     //it should be added and displayed in table
     //but, what about update of model?
     //seems to me, we need to connect some signals
-    auto result = initialConditions->diveInto();
-    outputForm = std::shared_ptr<OutputResultForm> (new OutputResultForm() );
-    connect(this, SIGNAL( modelEvaluated(ResultModel* ) ), outputForm.get(), SLOT(show() ) );
-    connect(this, SIGNAL( modelEvaluated(ResultModel*) ), outputForm.get(), SLOT(addResult(ResultModel*) ) );
-    auto model = std::make_shared<ResultModel>(result);
-    emit modelEvaluated(model);
+    /*
+            outputForm = std::shared_ptr<OutputResultForm> (new OutputResultForm() );
+            connect(this, SIGNAL( modelEvaluated(ResultModel* ) ), outputForm.get(), SLOT(show() ) );
+            connect(this, SIGNAL( modelEvaluated(ResultModel*) ), outputForm.get(), SLOT(addResult(ResultModel*) ) );
+            auto model = std::make_shared<ResultModel>(result);
+            emit modelEvaluated(model);
+     */
 }
 
 
 bool ExperimentModel::insertRows(int row, int count, const QModelIndex &parent)
 {
     //implement inserting of experiment results
+    if (row < 0 || row > rowCount(QModelIndex())){
+        return false;
+    }
+    auto insertIter = experiments.begin() += row;
+    auto itemPointer = static_cast<ExperimentParams**> (parent.internalPointer());
+    //TODO: Childrens handling!
+    experiments.insert(insertIter, itemPointer, itemPointer);
+    return true;
+}
 
+ExperimentParams::ExperimentParams(std::shared_ptr<FST> initialConditions, ExperimentStatus status, QObject *parent):
+    initialConditions(initialConditions), status(status), QObject(parent)
+{
+}
+
+void ExperimentParams::startComputation()
+{
+    result = initialConditions->diveInto();
+    emit computationFinished();
 }

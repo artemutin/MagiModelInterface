@@ -14,7 +14,7 @@ class experiments_results : public QDockWidget
     Q_OBJECT
 
 public:
-    explicit experiments_results(QWidget *parent = 0,  std::shared_ptr<ExperimentModel> experiments);
+    explicit experiments_results(std::shared_ptr<ExperimentModel> experiments, QWidget *parent = 0);
     ~experiments_results();
 
 private:

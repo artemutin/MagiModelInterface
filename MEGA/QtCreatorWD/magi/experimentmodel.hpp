@@ -6,24 +6,18 @@
 #include "common_constants.hpp"
 #include "resultmodel.hpp"
 
+class ExperimentParams;
+
+enum ExperimentStatus {
+    notStarted,
+    inProgress,
+    done
+};
+
 class ExperimentModel : public QAbstractItemModel
 {
 
     Q_OBJECT
-
-    enum ExperimentStatus {
-        notStarted,
-        inProgress,
-        done
-    };
-
-    //if we will use threads for computations, it means
-    //that it should be appropriate QObject with signals,
-    //mb thread support built-in
-    struct ExperimentParams{
-        std::shared_ptr<FST> initialConditions;
-        ExperimentStatus status;
-    };
 
     static constexpr Consts::Columns columns[] = {
            Consts::status,
@@ -47,7 +41,7 @@ class ExperimentModel : public QAbstractItemModel
 
     static std::map<int, Consts::Columns> columnByInt;
 
-    std::vector<ExperimentParams> experiments;
+    std::vector<ExperimentParams*> experiments;
     static constexpr int NCOLS = 1 + 2 + 2 + 5 + 1;
 
 public:
@@ -68,8 +62,31 @@ public slots:
     void startExperiment(std::shared_ptr<FST> initialConditions);
 signals:
     void modelEvaluated(std::shared_ptr<ResultModel>);
+    void startComputation();
 
 
+};
+
+//if we will use threads for computations, it means
+//that it should be appropriate QObject with signals,
+//mb thread support built-in
+class ExperimentParams: public QObject{
+    Q_OBJECT
+
+    friend class ExperimentModel;
+    std::shared_ptr<FST> initialConditions;
+    ResultPtr result;
+    ExperimentStatus status;
+
+public:
+    ExperimentParams(std::shared_ptr<FST> initialConditions, ExperimentStatus status = notStarted,
+                     QObject * parent = 0);
+
+public slots:
+    void startComputation();
+
+signals:
+    void computationFinished();
 };
 
 #endif // EXPERIMENTMODEL_HPP
