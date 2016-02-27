@@ -64,6 +64,7 @@ QVariant ExperimentModel::data(const QModelIndex &index, int role) const
         case Columns::x: return QVariant(model->proportion.x);
         case Columns::result: return QVariant(model->result);
         case Columns::nTiers: return QVariant(model->simConstants->numEpochs);
+        case Columns::stepU: return QVariant(model->simConstants->stepU);
         case Columns::cost: return QVariant(model->costFunction->c);
         case Columns::delta: return  QVariant(model->capitalFunction->savings);
         case Columns::exportCost: return  QVariant(model->productionFunction->ef.e);
@@ -93,7 +94,6 @@ QVariant ExperimentModel::headerData(int section, Qt::Orientation orientation, i
     if (role != Qt::DisplayRole)
         return QVariant();
 
-
     if (orientation == Qt::Horizontal) {
         auto colEnum = columnByInt.find(section)->second;
         QString label = Labels.find(colEnum)->second;
@@ -110,8 +110,8 @@ void ExperimentModel::startExperiment(std::shared_ptr<FST> initialConditions)
     auto newExperiment = new ExperimentParams(initialConditions, notStarted, this);
     //run FST in here, in other thread for best
     connect(this, SIGNAL(startComputation()), newExperiment, SLOT(startComputation()));
-    //and insertRow it here.
-    insertRow(rowCount(QModelIndex()), createIndex(0, 0, newExperiment ) );
+    //and insertData it here.
+    setData(createIndex(0, 0, this), QVariant::fromValue(newExperiment));
     //it should be added and displayed in table
     //but, what about update of model?
     //seems to me, we need to connect some signals
@@ -157,4 +157,21 @@ void ExperimentParams::startComputation()
 {
     result = initialConditions->diveInto();
     emit computationFinished();
+}
+
+
+bool ExperimentModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    emit beginInsertRows(QModelIndex(),
+                         index.row(), index.row()+1);
+    auto insertIter = experiments.begin() += index.row();
+    ExperimentParams* item = value.value<ExperimentParams*>();
+
+        //TODO: Childrens handling!
+        experiments.insert(insertIter, item);
+
+        //emit dataChanged(index, index, {role});
+        emit endInsertRows();
+        return true;
+
 }

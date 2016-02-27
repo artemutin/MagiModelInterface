@@ -57,12 +57,16 @@ public:
     // QAbstractItemModel interface
 public:
     virtual QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
     virtual bool insertRows(int row, int count, const QModelIndex &parent);
 public slots:
     void startExperiment(std::shared_ptr<FST> initialConditions);
 signals:
     void modelEvaluated(std::shared_ptr<ResultModel>);
     void startComputation();
+
+
+
 
 
 };
