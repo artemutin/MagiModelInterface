@@ -1,5 +1,6 @@
 #include "experiments_results.hpp"
 #include "ui_experiments_results.h"
+#include "outputresultform.hpp"
 
 experiments_results::experiments_results(ExperimentModel* experiments = nullptr, QWidget *parent) :
     QDockWidget(parent),
@@ -22,5 +23,13 @@ experiments_results::~experiments_results()
 
 void experiments_results::startExperiment(std::shared_ptr<FST> initialConditions)
 {
-   emit initialValues(initialConditions);
+    emit initialValues(initialConditions);
+}
+
+void experiments_results::rowDoubleClicked(QModelIndex* index)
+{
+    auto outputForm = new OutputResultForm(this);
+    const ExperimentParams* model = static_cast<const ExperimentParams* > (index->model());
+    outputForm->addResult(model->result);
+    this->parent()->addDockWidget(Qt::LeftDockWidgetArea, outputForm);
 }

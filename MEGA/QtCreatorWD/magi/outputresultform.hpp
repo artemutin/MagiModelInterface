@@ -1,7 +1,7 @@
 #ifndef OUTPUTRESULTFORM_HPP
 #define OUTPUTRESULTFORM_HPP
 
-#include <QWidget>
+#include <QDockWidget>
 #include <QObject>
 #include <QListView>
 #include "resultmodel.hpp"
@@ -10,7 +10,7 @@ namespace Ui {
 class OutputResultForm;
 }
 
-class OutputResultForm :  public QWidget
+class OutputResultForm :  public QDockWidget
 {
     Q_OBJECT
 

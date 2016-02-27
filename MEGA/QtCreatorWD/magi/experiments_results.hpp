@@ -26,6 +26,8 @@ signals:
     void initialValues(std::shared_ptr<FST> initialConditions);
     //it should handled doubleClick on row
     //to open appropriate results
+private slots:
+    void rowDoubleClicked(QModelIndex* );
     //and finaly, it all must be converted to DockedWidgets
     //like OpenCS did
     //after that, I have two options -

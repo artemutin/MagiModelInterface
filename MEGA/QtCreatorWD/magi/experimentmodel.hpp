@@ -63,7 +63,7 @@ public:
 public slots:
     //actualy dives into dfs
     void startExperiment(std::shared_ptr<FST> initialConditions);
-    //locates model in vector, and emits appropriate dataChanged signal
+    //locates model in vector, and emits appropriate dataChanged l
     void computationFinished(ExperimentParams*);
 signals:
     void modelEvaluated(std::shared_ptr<ResultModel>);

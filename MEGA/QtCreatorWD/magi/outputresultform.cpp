@@ -2,7 +2,7 @@
 #include "ui_outputresultform.h"
 
 OutputResultForm::OutputResultForm(QWidget *parent) :
-    QWidget(parent),
+    QDockWidget(parent),
     ui(new Ui::OutputResultForm)
 {
     ui->setupUi(this);
