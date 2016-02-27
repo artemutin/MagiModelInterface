@@ -14,14 +14,16 @@ class experiments_results : public QDockWidget
     Q_OBJECT
 
 public:
-    explicit experiments_results(std::shared_ptr<ExperimentModel> experiments, QWidget *parent = 0);
+    explicit experiments_results(ExperimentModel *experiments, QWidget *parent = 0);
     ~experiments_results();
 
 private:
     Ui::experiments_results *ui;
-    std::shared_ptr<ExperimentModel> experiments;
+    ExperimentModel* experiments;
 public slots:
+    void startExperiment(std::shared_ptr<FST> initialConditions);
 signals:
+    void initialValues(std::shared_ptr<FST> initialConditions);
     //it should handled doubleClick on row
     //to open appropriate results
     //and finaly, it all must be converted to DockedWidgets

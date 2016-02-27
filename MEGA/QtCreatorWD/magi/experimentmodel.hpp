@@ -45,7 +45,7 @@ class ExperimentModel : public QAbstractItemModel
     static constexpr int NCOLS = 1 + 2 + 2 + 5 + 1;
 
 public:
-    ExperimentModel();
+    ExperimentModel(QObject* parent);
 
     // QAbstractItemModel interface
     virtual QModelIndex index(int row, int column, const QModelIndex &parent) const;

@@ -8,6 +8,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    auto experimentsWidget = new experiments_results(nullptr, this);
+    addDockWidget(Qt::LeftDockWidgetArea, experimentsWidget);
+    connect(this,  &MainWindow::initialValuesEntered, experimentsWidget, &experiments_results::startExperiment);
 }
 
 MainWindow::~MainWindow()

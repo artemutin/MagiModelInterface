@@ -12,9 +12,8 @@ std::map<int, Consts::Columns> ExperimentModel::columnByInt = [](){
     return ret;
 }();
 
-ExperimentModel::ExperimentModel()
+ExperimentModel::ExperimentModel(QObject *parent):QAbstractItemModel(parent)
 {
-
 }
 
 
@@ -123,6 +122,7 @@ void ExperimentModel::startExperiment(std::shared_ptr<FST> initialConditions)
             auto model = std::make_shared<ResultModel>(result);
             emit modelEvaluated(model);
      */
+    emit startComputation();
 }
 
 
@@ -133,10 +133,19 @@ bool ExperimentModel::insertRows(int row, int count, const QModelIndex &parent)
         return false;
     }
     auto insertIter = experiments.begin() += row;
-    auto itemPointer = static_cast<ExperimentParams**> (parent.internalPointer());
-    //TODO: Childrens handling!
-    experiments.insert(insertIter, itemPointer, itemPointer);
-    return true;
+    if (count == 1){
+        emit beginInsertRows(createIndex(row, 0, this), row, row+count);
+
+        auto item = static_cast<ExperimentParams**> (parent.internalPointer());
+        //TODO: Childrens handling!
+        experiments.insert(insertIter, *item);
+
+        emit endInsertRows();
+        return true;
+    }else{
+        return false;
+    }
+
 }
 
 ExperimentParams::ExperimentParams(std::shared_ptr<FST> initialConditions, ExperimentStatus status, QObject *parent):

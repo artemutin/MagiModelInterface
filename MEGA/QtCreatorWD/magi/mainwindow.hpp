@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "model.hpp"
 #include "outputresultform.hpp"
+#include "experiments_results.hpp"
 
 namespace Ui {
 class MainWindow;
