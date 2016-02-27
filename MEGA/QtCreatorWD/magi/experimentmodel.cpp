@@ -110,6 +110,7 @@ void ExperimentModel::startExperiment(std::shared_ptr<FST> initialConditions)
     auto newExperiment = new ExperimentParams(initialConditions, notStarted, this);
     //run FST in here, in other thread for best
     connect(this, SIGNAL(startComputation()), newExperiment, SLOT(startComputation()));
+
     //and insertData it here.
     setData(createIndex(0, 0, this), QVariant::fromValue(newExperiment));
     //it should be added and displayed in table
@@ -123,6 +124,13 @@ void ExperimentModel::startExperiment(std::shared_ptr<FST> initialConditions)
             emit modelEvaluated(model);
      */
     emit startComputation();
+}
+
+void ExperimentModel::computationFinished(ExperimentParams * experiment)
+{
+    auto it = std::find(experiments.begin(), experiments.end(), experiment);
+    int row = std::distance(experiments.begin(), it);
+    emit dataChanged(createIndex(row, 0, this), createIndex(row, NCOLS, this));
 }
 
 
@@ -155,8 +163,10 @@ ExperimentParams::ExperimentParams(std::shared_ptr<FST> initialConditions, Exper
 
 void ExperimentParams::startComputation()
 {
+    status = inProgress;
     result = initialConditions->diveInto();
-    emit computationFinished();
+    status = done;
+    emit computationFinished(this);
 }
 
 

@@ -60,7 +60,10 @@ public:
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
     virtual bool insertRows(int row, int count, const QModelIndex &parent);
 public slots:
+    //actualy dives into dfs
     void startExperiment(std::shared_ptr<FST> initialConditions);
+    //locates model in vector, and emits appropriate dataChanged signal
+    void computationFinished(ExperimentParams*);
 signals:
     void modelEvaluated(std::shared_ptr<ResultModel>);
     void startComputation();
@@ -90,7 +93,7 @@ public slots:
     void startComputation();
 
 signals:
-    void computationFinished();
+    void computationFinished(ExperimentParams*);
 };
 
 #endif // EXPERIMENTMODEL_HPP
