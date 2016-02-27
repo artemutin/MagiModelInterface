@@ -1,5 +1,7 @@
 #include "experimentmodel.hpp"
 #include "ui_outputresultform.h"
+#include <QFuture>
+#include <QtConcurrent/QtConcurrent>
 
 constexpr Consts::Columns ExperimentModel::columns[];
 
@@ -164,7 +166,15 @@ ExperimentParams::ExperimentParams(std::shared_ptr<FST> initialConditions, Exper
 void ExperimentParams::startComputation()
 {
     status = inProgress;
-    result = initialConditions->diveInto();
+    connect(&watcher, &QFutureWatcher<ResultPtr>::finished, this, &ExperimentParams::futureFinished);
+    auto future = QtConcurrent::run(initialConditions.get(), &FST::diveInto);
+    watcher.setFuture(future);
+    //result = initialConditions->diveInto();
+}
+
+void ExperimentParams::futureFinished()
+{
+    result = watcher.result();
     status = done;
     emit computationFinished(this);
 }

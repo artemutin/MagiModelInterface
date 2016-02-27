@@ -2,6 +2,7 @@
 #define EXPERIMENTMODEL_HPP
 
 #include <QAbstractItemModel>
+#include <QFutureWatcher>
 #include "model.hpp"
 #include "common_constants.hpp"
 #include "resultmodel.hpp"
@@ -84,6 +85,7 @@ class ExperimentParams: public QObject{
     std::shared_ptr<FST> initialConditions;
     ResultPtr result;
     ExperimentStatus status;
+    QFutureWatcher<ResultPtr> watcher;
 
 public:
     ExperimentParams(std::shared_ptr<FST> initialConditions, ExperimentStatus status = notStarted,
@@ -91,6 +93,8 @@ public:
 
 public slots:
     void startComputation();
+private slots:
+    void futureFinished();
 
 signals:
     void computationFinished(ExperimentParams*);
