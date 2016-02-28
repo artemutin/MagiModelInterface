@@ -1,15 +1,20 @@
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 #include "outputresultform.hpp"
+#include "editexperimentdockwidget.hpp"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    auto experimentsWidget = new experiments_results(nullptr, this);
-    addDockWidget(Qt::LeftDockWidgetArea, experimentsWidget);
-    connect(this,  &MainWindow::initialValuesEntered, experimentsWidget, &experiments_results::startExperiment);
+    this->experiments = new ExperimentModel(this);
+    ui->experimentsTableView->setModel(this->experiments);
+
+    //auto experimentsWidget = new experiments_results(nullptr, this);
+    //ui->centralWidget->layout()->addWidget(experimentsWidget);
+    //addDockWidget(Qt::LeftDockWidgetArea, experimentsWidget);
+    connect(ui->a,  &MainWindow::initialValuesEntered, experimentsWidget, &experiments_results::startExperiment);
 }
 
 MainWindow::~MainWindow()
@@ -17,16 +22,16 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::buttonClicked()
+void MainWindow::addButtonClicked()
 {
-    auto simulationConstants = std::make_shared<SimulationConstants>(ui->stepUSpinBox->value(), ui->nEpochsSpinBox->value());
-    auto capitalFunction  = std::make_shared<CapitalFunction>(ui->deltaSpinBox->value(), ui->savingSpinBox->value());
-    auto productionFunction  = std::make_shared<ProductionFunction>(ui->regASpinBox->value(), ui->regP1SpinBox->value(),
-                                                                    ui->regP2SpinBox->value(), ui->exportSpinBox->value(), ui->woodProductionSpinBox->value());
-    auto costFunction  = std::make_shared<CostFunction>(ui->CostSpinBox->value(), ui->savingSpinBox->value());
+    auto editWidget = new editExperimentDockWidget(this);
+    addDockWidget(Qt::RightDockWidgetArea, editWidget);
+    connect(editWidget, &editExperimentDockWidget::initialValuesEntered, experiments, &ExperimentModel::addExperiment);
+}
 
-    auto initialConditions = std::make_shared<FST>(ui->ProductionSpinBox->value(), ui->capitalSpinBox->value(),
-                         Proportion::makeNewProportionFromAX(ui->aSpinBox->value(), ui->xSpinBox->value()), 0, 0,
-              simulationConstants, capitalFunction, productionFunction, costFunction);
-    emit initialValuesEntered(initialConditions);
- }
+void MainWindow::startButtonClicked()
+{
+    //TODO: handle multiple selection
+    auto selectionList = ui->experimentsTableView->selectedIndexes();
+    //start selected experiment
+}

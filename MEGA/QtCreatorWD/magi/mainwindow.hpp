@@ -22,9 +22,10 @@ public:
 private:
     Ui::MainWindow *ui;
     std::vector<OutputResultForm*> outputForms;
-    ResultPtr result;
+    ExperimentModel* experiments;
 private slots:
-    void buttonClicked();
+    void addButtonClicked();
+    void startButtonClicked();
 signals:
     void initialValuesEntered(std::shared_ptr<FST> initialConditions);
 };

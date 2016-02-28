@@ -17,6 +17,11 @@ public:
 
 private:
     Ui::editExperimentDockWidget *ui;
+
+private slots:
+    void buttonClicked();
+signals:
+    void initialValuesEntered(std::shared_ptr<FST> initialConditions);
 };
 
 #endif // EDITEXPERIMENTDOCKWIDGET_HPP

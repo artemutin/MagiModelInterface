@@ -1,7 +1,7 @@
 #ifndef EXPERIMENTS_RESULTS_HPP
 #define EXPERIMENTS_RESULTS_HPP
 
-#include <QDockWidget>
+#include <QWidget>
 #include <memory>
 #include "experimentmodel.hpp"
 
@@ -9,7 +9,7 @@ namespace Ui {
 class experiments_results;
 }
 
-class experiments_results : public QDockWidget
+class experiments_results : public QWidget
 {
     Q_OBJECT
 

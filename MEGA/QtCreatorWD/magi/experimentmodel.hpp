@@ -62,7 +62,8 @@ public:
     virtual bool insertRows(int row, int count, const QModelIndex &parent);
 public slots:
     //actualy dives into dfs
-    void startExperiment(std::shared_ptr<FST> initialConditions);
+    void startExperiment(const QModelIndex&);
+    void addExperiment(std::shared_ptr<FST> initialConditions);
     //locates model in vector, and emits appropriate dataChanged l
     void computationFinished(ExperimentParams*);
 signals:
@@ -92,6 +93,9 @@ public:
                      QObject * parent = 0);
 
     ResultPtr getResult() const;
+
+    ExperimentStatus getStatus() const;
+    void setStatus(const ExperimentStatus &value);
 
 public slots:
     void startComputation();

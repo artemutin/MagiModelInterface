@@ -112,27 +112,23 @@ QVariant ExperimentModel::headerData(int section, Qt::Orientation orientation, i
     return QVariant();
 }
 
-void ExperimentModel::startExperiment(std::shared_ptr<FST> initialConditions)
+void ExperimentModel::startExperiment(const QModelIndex & index)
 {
-    //for now, i see it, as we create new ExperimentParams
-    auto newExperiment = new ExperimentParams(initialConditions, notStarted, this);
-    //run FST in here, in other thread for best
-    connect(this, SIGNAL(startComputation()), newExperiment, SLOT(startComputation()));
-    connect(newExperiment, &ExperimentParams::computationFinished, this, &ExperimentModel::computationFinished);
+    ExperimentParams* experiment = experiments.at(index.row());
+    if (experiment->getStatus() != notStarted){
+        return;//experiment has already been done
+    }else{
+        emit dataChanged(index, index);
+        connect(experiment, &ExperimentParams::computationFinished, this, &ExperimentModel::computationFinished);
+        //must return a link to params when finished
+    }
+}
 
+void ExperimentModel::addExperiment(std::shared_ptr<FST> initialConditions)
+{
+    auto newExperiment = new ExperimentParams(initialConditions, notStarted, this);
     //and insertData it here.
     setData(createIndex(0, 0, this), QVariant::fromValue(newExperiment));
-    //it should be added and displayed in table
-    //but, what about update of model?
-    //seems to me, we need to connect some signals
-    /*
-            outputForm = std::shared_ptr<OutputResultForm> (new OutputResultForm() );
-            connect(this, SIGNAL( modelEvaluated(ResultModel* ) ), outputForm.get(), SLOT(show() ) );
-            connect(this, SIGNAL( modelEvaluated(ResultModel*) ), outputForm.get(), SLOT(addResult(ResultModel*) ) );
-            auto model = std::make_shared<ResultModel>(result);
-            emit modelEvaluated(model);
-     */
-    emit startComputation();
 }
 
 void ExperimentModel::computationFinished(ExperimentParams * experiment)
@@ -168,6 +164,16 @@ bool ExperimentModel::insertRows(int row, int count, const QModelIndex &parent)
 ResultPtr ExperimentParams::getResult() const
 {
     return result;
+}
+
+ExperimentStatus ExperimentParams::getStatus() const
+{
+    return status;
+}
+
+void ExperimentParams::setStatus(const ExperimentStatus &value)
+{
+    status = value;
 }
 
 ExperimentParams::ExperimentParams(std::shared_ptr<FST> initialConditions, ExperimentStatus status, QObject *parent):
