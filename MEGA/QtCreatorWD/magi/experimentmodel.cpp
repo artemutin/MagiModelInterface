@@ -1,5 +1,4 @@
 #include "experimentmodel.hpp"
-#include "ui_outputresultform.h"
 #include <QFuture>
 #include <QtConcurrent/QtConcurrent>
 
@@ -107,7 +106,9 @@ QVariant ExperimentModel::headerData(int section, Qt::Orientation orientation, i
 
         return QVariant(label);
     }
-
+    if (orientation == Qt::Vertical){
+        return QVariant(section);
+    }
     return QVariant();
 }
 
@@ -194,7 +195,7 @@ void ExperimentParams::futureFinished()
 bool ExperimentModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     emit beginInsertRows(QModelIndex(),
-                         index.row(), index.row()+1);
+                         index.row(), index.row());
     auto insertIter = experiments.begin() += index.row();
     ExperimentParams* item = value.value<ExperimentParams*>();
 

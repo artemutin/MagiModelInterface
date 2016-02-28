@@ -5,6 +5,7 @@ OutputResultForm::OutputResultForm(QWidget *parent) :
 {
     this->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     this->setWidget(resultsTableView);
+    this->setWindowTitle("Подробный результат");
 }
 
 OutputResultForm::~OutputResultForm()

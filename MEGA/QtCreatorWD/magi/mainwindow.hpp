@@ -16,12 +16,12 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
-
+    // !!!!!!!! OutputResultForm* addOutputForm();
     ~MainWindow();
 
 private:
     Ui::MainWindow *ui;
-    std::shared_ptr<OutputResultForm> outputForm;
+    std::vector<OutputResultForm*> outputForms;
     ResultPtr result;
 private slots:
     void buttonClicked();

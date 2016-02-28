@@ -1,6 +1,5 @@
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
-#include "ui_outputresultform.h"
 #include "outputresultform.hpp"
 
 MainWindow::MainWindow(QWidget *parent) :
