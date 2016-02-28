@@ -18,7 +18,8 @@ SOURCES += mainwindow.cpp \
     outputresultform.cpp \
     resultmodel.cpp \
     experimentmodel.cpp \
-    experiments_results.cpp
+    experiments_results.cpp \
+    editexperimentdockwidget.cpp
 
 HEADERS  += mainwindow.hpp \
     model.hpp \
@@ -26,10 +27,12 @@ HEADERS  += mainwindow.hpp \
     resultmodel.hpp \
     experimentmodel.hpp \
     common_constants.hpp \
-    experiments_results.hpp
+    experiments_results.hpp \
+    editexperimentdockwidget.hpp
 
 FORMS    += mainwindow.ui \
-    experiments_results.ui
+    experiments_results.ui \
+    editexperimentdockwidget.ui
 
 CONFIG += c++14
 QMAKE_CXXFLAGS_RELEASE += -O3
