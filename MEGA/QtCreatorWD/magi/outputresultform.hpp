@@ -3,25 +3,20 @@
 
 #include <QDockWidget>
 #include <QObject>
-#include <QListView>
+#include <QTableView>
 #include "resultmodel.hpp"
 
-namespace Ui {
-class OutputResultForm;
-}
 
 class OutputResultForm :  public QDockWidget
 {
     Q_OBJECT
 
+    QTableView* resultsTableView;
 public:
     explicit OutputResultForm(QWidget *parent = 0);
     void addResult(ResultModel* );
     ~OutputResultForm();
 public slots:
 
-
-private:
-    Ui::OutputResultForm *ui;
 };
 #endif // OUTPUTRESULTFORM_HPP

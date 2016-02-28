@@ -1,19 +1,18 @@
 #include "outputresultform.hpp"
-#include "ui_outputresultform.h"
 
 OutputResultForm::OutputResultForm(QWidget *parent) :
-    QDockWidget(parent),
-    ui(new Ui::OutputResultForm)
+    QDockWidget(parent), resultsTableView(new QTableView)
 {
-    ui->setupUi(this);
+    this->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    this->setWidget(resultsTableView);
 }
 
 OutputResultForm::~OutputResultForm()
 {
-    delete ui;
+    delete resultsTableView;
 }
 
 void OutputResultForm::addResult(ResultModel * model)
 {
-    ui->resultsTableView->setModel(model);
+    resultsTableView->setModel(model);
 }
