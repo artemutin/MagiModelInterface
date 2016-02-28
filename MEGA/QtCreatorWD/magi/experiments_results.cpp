@@ -1,6 +1,7 @@
 #include "experiments_results.hpp"
 #include "ui_experiments_results.h"
 #include "outputresultform.hpp"
+#include "mainwindow.hpp"
 
 experiments_results::experiments_results(ExperimentModel* experiments = nullptr, QWidget *parent) :
     QDockWidget(parent),
@@ -8,12 +9,13 @@ experiments_results::experiments_results(ExperimentModel* experiments = nullptr,
     experiments(experiments)
 {
     ui->setupUi(this);
-    if (!experiments){
-        experiments = new ExperimentModel(this);
+    if (!this->experiments){
+        this->experiments = new ExperimentModel(this);
     }
 
-    ui->experimentsTableView->setModel(experiments);
-    connect(this, &experiments_results::initialValues, experiments, &ExperimentModel::startExperiment);
+    ui->experimentsTableView->setModel(this->experiments);
+    connect(this, &experiments_results::initialValues, this->experiments, &ExperimentModel::startExperiment);
+    connect(ui->experimentsTableView, &QTableView::doubleClicked, this, &experiments_results::rowDoubleClicked);
     }
 
 experiments_results::~experiments_results()
@@ -26,10 +28,10 @@ void experiments_results::startExperiment(std::shared_ptr<FST> initialConditions
     emit initialValues(initialConditions);
 }
 
-void experiments_results::rowDoubleClicked(QModelIndex* index)
+void experiments_results::rowDoubleClicked(const QModelIndex& index)
 {
     auto outputForm = new OutputResultForm(this);
-    const ExperimentParams* model = static_cast<const ExperimentParams* > (index->model());
-    outputForm->addResult(model->result);
-    this->parent()->addDockWidget(Qt::LeftDockWidgetArea, outputForm);
+    auto resultModel = new ResultModel( experiments->getResult(index.row()) );
+    outputForm->addResult( resultModel  );
+    static_cast<MainWindow*>(this->parent())->addDockWidget(Qt::LeftDockWidgetArea, outputForm);
 }

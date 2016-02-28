@@ -27,7 +27,7 @@ signals:
     //it should handled doubleClick on row
     //to open appropriate results
 private slots:
-    void rowDoubleClicked(QModelIndex* );
+    void rowDoubleClicked(const QModelIndex & );
     //and finaly, it all must be converted to DockedWidgets
     //like OpenCS did
     //after that, I have two options -

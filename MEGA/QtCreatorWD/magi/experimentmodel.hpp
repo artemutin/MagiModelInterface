@@ -47,7 +47,7 @@ class ExperimentModel : public QAbstractItemModel
 
 public:
     ExperimentModel(QObject* parent);
-
+    ResultPtr getResult(int row);
     // QAbstractItemModel interface
     virtual QModelIndex index(int row, int column, const QModelIndex &parent) const;
     virtual QModelIndex parent(const QModelIndex &child) const;
@@ -90,6 +90,8 @@ class ExperimentParams: public QObject{
 public:
     ExperimentParams(std::shared_ptr<FST> initialConditions, ExperimentStatus status = notStarted,
                      QObject * parent = 0);
+
+    ResultPtr getResult() const;
 
 public slots:
     void startComputation();

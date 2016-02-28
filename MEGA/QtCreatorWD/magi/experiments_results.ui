@@ -23,4 +23,7 @@
  </widget>
  <resources/>
  <connections/>
+ <slots>
+  <slot>rowDoubleClicked(QModelIndex*)</slot>
+ </slots>
 </ui>

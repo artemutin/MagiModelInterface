@@ -16,9 +16,10 @@ class OutputResultForm :  public QDockWidget
 
 public:
     explicit OutputResultForm(QWidget *parent = 0);
+    void addResult(ResultModel* );
     ~OutputResultForm();
 public slots:
-    void addResult(ResultModel* );
+
 
 private:
     Ui::OutputResultForm *ui;

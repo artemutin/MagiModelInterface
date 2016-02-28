@@ -18,6 +18,11 @@ ExperimentModel::ExperimentModel(QObject *parent):QAbstractItemModel(parent)
 {
 }
 
+ResultPtr ExperimentModel::getResult(int row)
+{
+    return experiments[row]->getResult();
+}
+
 
 QModelIndex ExperimentModel::index(int row, int column, const QModelIndex &parent) const
 {
@@ -112,6 +117,7 @@ void ExperimentModel::startExperiment(std::shared_ptr<FST> initialConditions)
     auto newExperiment = new ExperimentParams(initialConditions, notStarted, this);
     //run FST in here, in other thread for best
     connect(this, SIGNAL(startComputation()), newExperiment, SLOT(startComputation()));
+    connect(newExperiment, &ExperimentParams::computationFinished, this, &ExperimentModel::computationFinished);
 
     //and insertData it here.
     setData(createIndex(0, 0, this), QVariant::fromValue(newExperiment));
@@ -156,6 +162,11 @@ bool ExperimentModel::insertRows(int row, int count, const QModelIndex &parent)
         return false;
     }
 
+}
+
+ResultPtr ExperimentParams::getResult() const
+{
+    return result;
 }
 
 ExperimentParams::ExperimentParams(std::shared_ptr<FST> initialConditions, ExperimentStatus status, QObject *parent):
