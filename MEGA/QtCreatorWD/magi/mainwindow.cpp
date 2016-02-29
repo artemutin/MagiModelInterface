@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //auto experimentsWidget = new experiments_results(nullptr, this);
     //ui->centralWidget->layout()->addWidget(experimentsWidget);
     //addDockWidget(Qt::LeftDockWidgetArea, experimentsWidget);
-    connect(ui->a,  &MainWindow::initialValuesEntered, experimentsWidget, &experiments_results::startExperiment);
+    //connect(ui->a,  &MainWindow::initialValuesEntered, experimentsWidget, &experiments_results::startExperiment);
 }
 
 MainWindow::~MainWindow()
@@ -32,6 +32,11 @@ void MainWindow::addButtonClicked()
 void MainWindow::startButtonClicked()
 {
     //TODO: handle multiple selection
-    auto selectionList = ui->experimentsTableView->selectedIndexes();
-    //start selected experiment
+    QItemSelectionModel *select = ui->experimentsTableView->selectionModel();
+    if (select->hasSelection()){
+        auto selectionList = select->selectedRows();
+        //start selected experiment
+        experiments->startExperiment( selectionList.first() );
+    }
+
 }

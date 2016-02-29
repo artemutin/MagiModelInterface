@@ -2,6 +2,8 @@
 #define EDITEXPERIMENTDOCKWIDGET_HPP
 
 #include <QDockWidget>
+#include <memory>
+#include "model.hpp"
 
 namespace Ui {
 class editExperimentDockWidget;

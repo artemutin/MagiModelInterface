@@ -118,9 +118,10 @@ void ExperimentModel::startExperiment(const QModelIndex & index)
     if (experiment->getStatus() != notStarted){
         return;//experiment has already been done
     }else{
+        experiment->setStatus(inProgress);
         emit dataChanged(index, index);
-        connect(experiment, &ExperimentParams::computationFinished, this, &ExperimentModel::computationFinished);
         //must return a link to params when finished
+        connect(experiment, &ExperimentParams::computationFinished, this, &ExperimentModel::computationFinished);
     }
 }
 
@@ -133,6 +134,8 @@ void ExperimentModel::addExperiment(std::shared_ptr<FST> initialConditions)
 
 void ExperimentModel::computationFinished(ExperimentParams * experiment)
 {
+    //experiment has been done, and return pointer to themself
+    //which we have saved at experiments vector
     auto it = std::find(experiments.begin(), experiments.end(), experiment);
     int row = std::distance(experiments.begin(), it);
     emit dataChanged(createIndex(row, 0, this), createIndex(row, NCOLS, this));
@@ -183,11 +186,9 @@ ExperimentParams::ExperimentParams(std::shared_ptr<FST> initialConditions, Exper
 
 void ExperimentParams::startComputation()
 {
-    status = inProgress;
     connect(&watcher, &QFutureWatcher<ResultPtr>::finished, this, &ExperimentParams::futureFinished);
     auto future = QtConcurrent::run(initialConditions.get(), &FST::diveInto);
     watcher.setFuture(future);
-    //result = initialConditions->diveInto();
 }
 
 void ExperimentParams::futureFinished()

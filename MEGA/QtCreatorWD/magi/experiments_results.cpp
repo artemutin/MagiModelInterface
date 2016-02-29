@@ -4,7 +4,7 @@
 #include "mainwindow.hpp"
 
 experiments_results::experiments_results(ExperimentModel* experiments = nullptr, QWidget *parent) :
-    QDockWidget(parent),
+    QWidget(parent),
     ui(new Ui::experiments_results),
     experiments(experiments)
 {
@@ -14,8 +14,8 @@ experiments_results::experiments_results(ExperimentModel* experiments = nullptr,
     }
 
     ui->experimentsTableView->setModel(this->experiments);
-    connect(this, &experiments_results::initialValues, this->experiments, &ExperimentModel::startExperiment);
-    connect(ui->experimentsTableView, &QTableView::doubleClicked, this, &experiments_results::rowDoubleClicked);
+    //connect(this, &experiments_results::initialValues, this->experiments, &ExperimentModel::startExperiment);
+    //connect(ui->experimentsTableView, &QTableView::doubleClicked, this, &experiments_results::rowDoubleClicked);
     }
 
 experiments_results::~experiments_results()
