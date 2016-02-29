@@ -99,9 +99,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>startExperimentButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>startButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>572</x>
+     <y>58</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>572</x>
+     <y>356</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <signal>modelEvaluated()</signal>
   <slot>addButtonClicked()</slot>
+  <slot>startButtonClicked()</slot>
  </slots>
 </ui>

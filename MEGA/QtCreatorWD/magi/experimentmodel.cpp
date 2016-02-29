@@ -122,6 +122,8 @@ void ExperimentModel::startExperiment(const QModelIndex & index)
         emit dataChanged(index, index);
         //must return a link to params when finished
         connect(experiment, &ExperimentParams::computationFinished, this, &ExperimentModel::computationFinished);
+        //actually start the experiment
+        experiment->startComputation();
     }
 }
 
