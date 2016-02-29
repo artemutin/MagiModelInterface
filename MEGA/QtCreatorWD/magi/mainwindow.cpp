@@ -40,3 +40,22 @@ void MainWindow::startButtonClicked()
     }
 
 }
+
+void MainWindow::showButtonClicked()
+{
+    //TODO: handle multiple selection
+    QItemSelectionModel *select = ui->experimentsTableView->selectionModel();
+    if (select->hasSelection()){
+        auto selectionList = select->selectedRows();
+        int row = selectionList.first().row();
+
+        //если имеются результат (валидный шаред пойнтер)
+        if (auto result = experiments->getResult( row) ){
+            auto resultForm = new OutputResultForm(this);
+            //creation of result model to display in table
+            auto resultModel = new ResultModel(result);
+            resultForm->addResult(resultModel);
+            addDockWidget(Qt::LeftDockWidgetArea, resultForm);
+        }
+    }
+}
