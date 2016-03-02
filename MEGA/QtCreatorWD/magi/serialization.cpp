@@ -9,6 +9,28 @@ QDataStream &operator<<(QDataStream & os, const SimulationTier & st)
         return os;
 }
 
+QDataStream &operator>>(QDataStream & is, SimulationTier & st)
+{
+    double production, capital, tier, result, alpha, controlParameter;
+    Proportion prop; SimulationConstants simConstants; CapitalFunction capitalFunction;
+    ProductionFunction productionFunction; CostFunction costFunction;
+
+    is >> production >> capital >> prop >> tier >> result >> alpha >> controlParameter >>
+            simConstants >> capitalFunction >> productionFunction >> costFunction;
+    st.production = production;
+    st.capital = capital;
+    st.proportion = prop;
+    st.tier = tier;
+    st.result = result;
+    st.alpha = alpha;
+    st.controlParameter = controlParameter;
+    st.simConstants = std::shared_ptr<SimulationConstants>(&simConstants);
+    st.capitalFunction = std::shared_ptr<CapitalFunction>(&capitalFunction);
+    st.productionFunction = std::shared_ptr<ProductionFunction>(&productionFunction);
+    st.costFunction = std::shared_ptr<CostFunction>(&costFunction);
+    return is;
+}
+
 QDataStream &operator<<(QDataStream & os, const Proportion & prop)
 {
     os << prop.a << prop.b << prop.x;
@@ -50,3 +72,5 @@ QDataStream &operator<<(QDataStream &os, const CostFunction & cf)
     os << cf.c << cf.saving;
     return os;
 }
+
+

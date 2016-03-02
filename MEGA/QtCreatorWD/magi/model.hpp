@@ -9,6 +9,7 @@
 struct SimulationConstants {
     double stepU;
     int numEpochs;
+    SimulationConstants(){}//serialization only
     SimulationConstants(double stepU, int numEpochs):stepU(stepU), numEpochs(numEpochs){}
 };
 
@@ -18,6 +19,7 @@ struct CapitalFunction {
     double savings;
 
     CapitalFunction(double delta, double savings):delta(delta), savings(savings){}
+    CapitalFunction(){}//serialization only
     double operator() (const double& capital, const double& production,
                        const double& controlParameter) const;
 };
@@ -28,14 +30,15 @@ struct RefactorFunction  {
     double p1;
     double p2;
 
-public:
+    RefactorFunction(){}//serializ
     RefactorFunction(double a, double p1, double p2):a(a), p1(p1), p2(p2){}
     double operator() (const double& capital, const double& refactoredWood) const;
 };
 
 //export cost and overall raw wood production, for now also constants
 struct ExportFunction {
-    const double e;
+    double e;
+    ExportFunction(){}//serial only
     ExportFunction(double e):e(e){}
     double operator() (const double& exportedWood) const;
 };
@@ -47,6 +50,7 @@ struct ProductionFunction{
     ExportFunction ef;
     double woodProduction;
 
+    ProductionFunction(){}//serialization only
     ProductionFunction(double a, double p1, double p2, double exportCost, double woodProduction):
         rf(a, p1, p2), ef(exportCost), woodProduction(woodProduction){}
     double operator() (const double& capital, const Proportion& prop) const;
@@ -71,6 +75,7 @@ public:
 struct CostFunction {
     double c, saving;
 
+    CostFunction(){}//for serialization
     CostFunction(double c, double saving):c(c), saving(saving){}
     double operator() (const double& controlParameter, const double& production) const;
 };
