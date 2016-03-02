@@ -28,7 +28,7 @@ private slots:
     void startButtonClicked();
     void showButtonClicked();
 signals:
-    void initialValuesEntered(std::shared_ptr<FST> initialConditions);
+    void initialValuesEntered(std::shared_ptr<ST> initialConditions);
 };
 
 #endif // MAINWINDOW_HPP

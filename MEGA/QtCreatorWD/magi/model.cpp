@@ -65,41 +65,18 @@ double ProductionFunction::operator()(const double &capital, const Proportion &p
     return ef(prop[1]*woodProduction) + rf(capital, prop[2]*woodProduction);
 }
 
-typedef FirstSimulationTier FST;
-
-SimulationTier::SimulationTier(const FirstSimulationTier &prev, double controlParameter): FirstSimulationTier(prev),
-  controlParameter(controlParameter)
-{
-    FST::tier = prev.tier + 1;
-    //since last year, the amount of capital of industry has changed due to investments and amortisation
-    capital = (*FST::capitalFunction)(prev.capital, prev.production, controlParameter);
-    //also we bought some lobby from last years investment budget
-    alpha = (*FST::costFunction)(controlParameter, prev.production);
-    //this lobby has changed a proportion of wood production
-    proportion = prev.proportion.makeNewProportionFromAlpha(alpha);
-    //changed proportion and capital affects a production, ofcourse
-    production = (*FST::productionFunction)(capital, proportion);
-    //and we can finally compute a result function
-    result = FirstSimulationTier::computeResult(prev);
-}
-
-void SimulationTier::addMyselfToList(ResultPtr ref)
-{
-    ref->push_back(*this);
-}
-
-ResultPtr FirstSimulationTier::diveInto()
+ResultPtr SimulationTier::diveInto()
 {
     //std::cout << "In tier:" << tier << std::endl;
-    if (tier == FST::simConstants->numEpochs){
+    if (tier == ST::simConstants->numEpochs){
         ResultPtr list = ResultPtr(new Result);
-        addMyselfToList(list);
+        list->push_back(*this);
         return list;
     }else{
         auto max_result = -1;
         ResultPtr bestList;
 
-        for (double u = 0; u <= 1; u += FST::simConstants->stepU){
+        for (double u = 0; u <= 1; u += ST::simConstants->stepU){
             //produce next tier with its results
             auto nextTier = SimulationTier(*this, u);
             //but it only produce next level tier and nothing more
@@ -115,24 +92,35 @@ ResultPtr FirstSimulationTier::diveInto()
 
         //finally, with best result, we pass our list further,
         //and dont forget to add themselves to it
-        addMyselfToList(bestList);
+        bestList->push_back(*this);
         return bestList;
     }
 }
 
-void FirstSimulationTier::addMyselfToList(ResultPtr ref)
-{
-}
-
-
-double FirstSimulationTier::computeResult(const FirstSimulationTier &prev)
+double SimulationTier::computeResult(const SimulationTier &prev)
 {
     return production + prev.production;
 }
 
-FirstSimulationTier::FirstSimulationTier(const double &production, const double &capital, const Proportion &prop, const double &result, const int &tier, std::shared_ptr<SimulationConstants> simConstants, std::shared_ptr<CapitalFunction> capitalFunction, std::shared_ptr<ProductionFunction> productionFunction, std::shared_ptr<CostFunction> costFunction):production(production), capital(capital), proportion(prop), result(result), tier(tier),
+SimulationTier::SimulationTier(const double &production, const double &capital, const Proportion &prop, const double &result, const int &tier, std::shared_ptr<SimulationConstants> simConstants, std::shared_ptr<CapitalFunction> capitalFunction, std::shared_ptr<ProductionFunction> productionFunction, std::shared_ptr<CostFunction> costFunction):production(production), capital(capital), proportion(prop), tier(tier), result(result),
     simConstants(simConstants), capitalFunction(capitalFunction), productionFunction(productionFunction),
     costFunction(costFunction)
 {
 
+}
+
+SimulationTier::SimulationTier(const SimulationTier &prev, double controlParameter): SimulationTier(prev)
+    {
+        this->controlParameter = controlParameter;
+        ST::tier = prev.tier + 1;
+        //since last year, the amount of capital of industry has changed due to investments and amortisation
+        capital = (*ST::capitalFunction)(prev.capital, prev.production, controlParameter);
+        //also we bought some lobby from last years investment budget
+        alpha = (*ST::costFunction)(controlParameter, prev.production);
+        //this lobby has changed a proportion of wood production
+        proportion = prev.proportion.makeNewProportionFromAlpha(alpha);
+        //changed proportion and capital affects a production, ofcourse
+        production = (*ST::productionFunction)(capital, proportion);
+        //and we can finally compute a result function
+        result = SimulationTier::computeResult(prev);
 }

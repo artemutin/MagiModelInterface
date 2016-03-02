@@ -53,7 +53,7 @@ QVariant ResultModel::data(const QModelIndex &index, int role) const
     if (role != Qt::DisplayRole)
             return QVariant();
 
-    auto model = static_cast<SimulationTier *> (index.internalPointer());
+    auto model = static_cast<ST *> (index.internalPointer());
     auto colEnum = columnByInt.find(index.column())->second;
 
     switch(colEnum){

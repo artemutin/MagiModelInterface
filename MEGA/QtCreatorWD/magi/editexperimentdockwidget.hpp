@@ -23,7 +23,7 @@ private:
 private slots:
     void buttonClicked();
 signals:
-    void initialValuesEntered(std::shared_ptr<FST> initialConditions);
+    void initialValuesEntered(std::shared_ptr<ST> initialConditions);
 };
 
 #endif // EDITEXPERIMENTDOCKWIDGET_HPP

@@ -21,9 +21,9 @@ private:
     Ui::experiments_results *ui;
     ExperimentModel* experiments;
 public slots:
-    void startExperiment(std::shared_ptr<FST> initialConditions);
+    void startExperiment(std::shared_ptr<ST> initialConditions);
 signals:
-    void initialValues(std::shared_ptr<FST> initialConditions);
+    void initialValues(std::shared_ptr<ST> initialConditions);
     //it should handled doubleClick on row
     //to open appropriate results
 private slots:

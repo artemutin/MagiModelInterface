@@ -23,7 +23,7 @@ experiments_results::~experiments_results()
     delete ui;
 }
 
-void experiments_results::startExperiment(std::shared_ptr<FST> initialConditions)
+void experiments_results::startExperiment(std::shared_ptr<ST> initialConditions)
 {
     emit initialValues(initialConditions);
 }

@@ -127,7 +127,7 @@ void ExperimentModel::startExperiment(const QModelIndex & index)
     }
 }
 
-void ExperimentModel::addExperiment(std::shared_ptr<FST> initialConditions)
+void ExperimentModel::addExperiment(std::shared_ptr<ST> initialConditions)
 {
     auto newExperiment = new ExperimentParams(initialConditions, notStarted, this);
     //and insertData it here.
@@ -181,7 +181,7 @@ void ExperimentParams::setStatus(const ExperimentStatus &value)
     status = value;
 }
 
-ExperimentParams::ExperimentParams(std::shared_ptr<FST> initialConditions, ExperimentStatus status, QObject *parent):
+ExperimentParams::ExperimentParams(std::shared_ptr<ST> initialConditions, ExperimentStatus status, QObject *parent):
     initialConditions(initialConditions), status(status), QObject(parent)
 {
 }
@@ -189,7 +189,7 @@ ExperimentParams::ExperimentParams(std::shared_ptr<FST> initialConditions, Exper
 void ExperimentParams::startComputation()
 {
     connect(&watcher, &QFutureWatcher<ResultPtr>::finished, this, &ExperimentParams::futureFinished);
-    auto future = QtConcurrent::run(initialConditions.get(), &FST::diveInto);
+    auto future = QtConcurrent::run(initialConditions.get(), &ST::diveInto);
     watcher.setFuture(future);
 }
 

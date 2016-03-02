@@ -75,14 +75,18 @@ struct CostFunction {
     double operator() (const double& controlParameter, const double& production) const;
 };
 
+struct SimulationTier;
+typedef SimulationTier ST;
 typedef std::list<SimulationTier> Result;
 typedef std::shared_ptr<Result> ResultPtr;
 
-struct FirstSimulationTier {
+struct SimulationTier {
     double production, capital;//current production and capital
     Proportion proportion;
     int tier;//what tier of simulation it is
     double result;//result of the tier - summary production, or whatever;
+    double alpha;
+    double controlParameter;
 
     std::shared_ptr<SimulationConstants> simConstants;
     std::shared_ptr<CapitalFunction> capitalFunction;
@@ -90,30 +94,18 @@ struct FirstSimulationTier {
     std::shared_ptr<CostFunction> costFunction;
 
     ResultPtr diveInto();
-    //polymorfic hack for adding to queue list
-    virtual void addMyselfToList(ResultPtr ref );
 
-    double computeResult(const FirstSimulationTier& prevRes);
+    double computeResult(const SimulationTier& prevRes);
 
-    FirstSimulationTier(const double& production, const double& capital, const Proportion& prop,
+    SimulationTier(const double& production, const double& capital, const Proportion& prop,
                         const double& result, const int& tier,
                         std::shared_ptr<SimulationConstants> simConstants,
                         std::shared_ptr<CapitalFunction> capitalFunction,
                         std::shared_ptr<ProductionFunction> productionFunction,
                         std::shared_ptr<CostFunction> costFunction);
-    FirstSimulationTier(){}
+    SimulationTier(){}
+    SimulationTier(const SimulationTier& prev, double controlParameter);
 };
-typedef FirstSimulationTier FST;
-
-struct SimulationTier: public FirstSimulationTier{
-    double alpha;
-    double controlParameter;
-
-    SimulationTier(const FirstSimulationTier& prev, double controlParameter);
-
-    virtual void addMyselfToList(ResultPtr ref);
-};
-typedef SimulationTier ST;
 
 
 #endif // MODEL_HPP

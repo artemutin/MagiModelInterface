@@ -63,7 +63,7 @@ public:
 public slots:
     //actualy dives into dfs
     void startExperiment(const QModelIndex&);
-    void addExperiment(std::shared_ptr<FST> initialConditions);
+    void addExperiment(std::shared_ptr<ST> initialConditions);
     //locates model in vector, and emits appropriate dataChanged l
     void computationFinished(ExperimentParams*);
 signals:
@@ -83,13 +83,13 @@ class ExperimentParams: public QObject{
     Q_OBJECT
 
     friend class ExperimentModel;
-    std::shared_ptr<FST> initialConditions;
+    std::shared_ptr<ST> initialConditions;
     ResultPtr result;
     ExperimentStatus status;
     QFutureWatcher<ResultPtr> watcher;
 
 public:
-    ExperimentParams(std::shared_ptr<FST> initialConditions, ExperimentStatus status = notStarted,
+    ExperimentParams(std::shared_ptr<ST> initialConditions, ExperimentStatus status = notStarted,
                      QObject * parent = 0);
 
     ResultPtr getResult() const;
