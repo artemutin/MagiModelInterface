@@ -19,7 +19,8 @@ SOURCES += mainwindow.cpp \
     resultmodel.cpp \
     experimentmodel.cpp \
     experiments_results.cpp \
-    editexperimentdockwidget.cpp
+    editexperimentdockwidget.cpp \
+    serialization.cpp
 
 HEADERS  += mainwindow.hpp \
     model.hpp \
@@ -28,7 +29,8 @@ HEADERS  += mainwindow.hpp \
     experimentmodel.hpp \
     common_constants.hpp \
     experiments_results.hpp \
-    editexperimentdockwidget.hpp
+    editexperimentdockwidget.hpp \
+    serialization.hpp
 
 FORMS    += mainwindow.ui \
     experiments_results.ui \
