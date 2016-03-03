@@ -26,6 +26,6 @@ QDataStream &operator<<(QDataStream & os, const ExportFunction &);
 QDataStream &operator>>(QDataStream & os, ExportFunction &);
 
 QDataStream &operator<<(QDataStream & os, const CostFunction &);
-QDataStream &operator>>(QDataStream & os, const CostFunction &);
+QDataStream &operator>>(QDataStream & os, CostFunction &);
 
 #endif // SERIALIZATION_HPP

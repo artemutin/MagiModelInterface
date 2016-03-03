@@ -37,10 +37,24 @@ QDataStream &operator<<(QDataStream & os, const Proportion & prop)
     return os;
 }
 
+QDataStream &operator>>(QDataStream &is, Proportion & prop)
+{
+    double t;
+    is >> t;prop.a = t;is >> t; prop.b = t; is >> t; prop.x = t;
+    return is;
+}
+
 QDataStream &operator<<(QDataStream & os, const SimulationConstants & c)
 {
     os << c.stepU << c.numEpochs;
     return os;
+}
+
+QDataStream &operator>>(QDataStream & is, SimulationConstants &c)
+{
+    double t;
+    is >> t; c.stepU = t; is >> t; c.numEpochs = t;
+    return is;
 }
 
 QDataStream &operator<<(QDataStream &os, const CapitalFunction & c)
@@ -49,10 +63,24 @@ QDataStream &operator<<(QDataStream &os, const CapitalFunction & c)
     return os;
 }
 
+QDataStream &operator>>(QDataStream &is, CapitalFunction & c)
+{
+    double t;
+    is >> t; c.delta = t; is >> t; c.savings = t;
+    return is;
+}
+
 QDataStream &operator<<(QDataStream &os, const ProductionFunction & pf)
 {
     os << pf.rf << pf.ef << pf.woodProduction;
     return os;
+}
+
+QDataStream &operator>>(QDataStream &is, ProductionFunction &pf)
+{
+    RefactorFunction rf; ExportFunction ef;
+    is >> rf; pf.rf = rf; is >> ef; pf.ef = ef;
+    return is;
 }
 
 QDataStream &operator<<(QDataStream &os, const RefactorFunction & rf)
@@ -61,10 +89,25 @@ QDataStream &operator<<(QDataStream &os, const RefactorFunction & rf)
     return os;
 }
 
+QDataStream &operator>>(QDataStream &is, RefactorFunction & rf)
+{
+    double t;
+    is >> t; rf.a = t; is >> t; rf.p1 = t; is >> t; rf.p2 = t;
+    return is;
+}
+
 QDataStream &operator<<(QDataStream &os, const ExportFunction & ef)
 {
     os << ef.e;
     return os;
+}
+
+
+QDataStream &operator>>(QDataStream &is, ExportFunction &ef)
+{
+    double t;
+    is >> ef.e;
+    return is;
 }
 
 QDataStream &operator<<(QDataStream &os, const CostFunction & cf)
@@ -73,4 +116,9 @@ QDataStream &operator<<(QDataStream &os, const CostFunction & cf)
     return os;
 }
 
-
+QDataStream &operator>>(QDataStream &is, CostFunction & cf)
+{
+    double t;
+    is >> cf.c >> cf.saving;
+    return is;
+}
