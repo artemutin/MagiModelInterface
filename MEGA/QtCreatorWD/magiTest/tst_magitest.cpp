@@ -17,6 +17,8 @@ private Q_SLOTS:
     void proportion();
     void costFunction();
     void firstSimulationTier();
+    void serializationTest();
+    void serializationTest_data();
 };
 
 
@@ -79,6 +81,31 @@ void MagiTest::firstSimulationTier()
               simulationConstants, capitalFunction, productionFunction, costFunction);
     auto best = start->diveInto();
     int i = 32;
+}
+
+void MagiTest::serializationTest()
+{
+    auto simulationConstants = std::make_shared<SimulationConstants>(ui->stepUSpinBox->value(), ui->nEpochsSpinBox->value());
+    auto capitalFunction  = std::make_shared<CapitalFunction>(ui->deltaSpinBox->value(), ui->savingSpinBox->value());
+    auto productionFunction  = std::make_shared<ProductionFunction>(ui->regASpinBox->value(), ui->regP1SpinBox->value(),
+                                                                    ui->regP2SpinBox->value(), ui->exportSpinBox->value(), ui->woodProductionSpinBox->value());
+    auto costFunction  = std::make_shared<CostFunction>(ui->CostSpinBox->value(), ui->savingSpinBox->value());
+
+    auto initialConditions = std::make_shared<ST>(ui->ProductionSpinBox->value(), ui->capitalSpinBox->value(),
+                         Proportion::makeNewProportionFromAX(ui->aSpinBox->value(), ui->xSpinBox->value()), 0, 0,
+              simulationConstants, capitalFunction, productionFunction, costFunction);
+}
+
+void MagiTest::serializationTest_data()
+{
+    using namespace QTest;
+    auto columns = QVector<const char*> { "stepU", "nEpochs", "delta", "saving", "regA", "regP1", "regP2", "export", "wood", "cost",
+            "production", "capital", "a", "x"};
+    std::for_each(columns.begin(), columns.end(), [](auto t){ return addColumn<double>(t); });
+    QTestData& rowOne = newRow("ones");
+    std::for_each(columns.begin(), columns.end(), [&rowOne](auto str){
+        (rowOne << 1.0);
+    });
 }
 
 QTEST_APPLESS_MAIN(MagiTest)
