@@ -1,9 +1,14 @@
 #include "model.hpp"
-#include <iostream>
+#include <QtGlobal>
 
 double RefactorFunction::operator()(const double &capital, const double &resource) const
 {
     return a*pow(capital, p1)*pow(resource, p2);
+}
+
+bool RefactorFunction::operator==(const RefactorFunction &a) const
+{
+    return qFuzzyCompare(a.a, this->a) && qFuzzyCompare(a.p1, p1) && qFuzzyCompare(a.p2, p2);
 }
 
 double ExportFunction::operator()(const double &N) const
@@ -11,9 +16,19 @@ double ExportFunction::operator()(const double &N) const
     return e*N;
 }
 
+bool ExportFunction::operator==(const ExportFunction &a) const
+{
+    return qFuzzyCompare(a.e, e);
+}
+
 double CapitalFunction::operator()(const double &capital, const double &production, const double &controlParameter) const
 {
     return delta*capital + (1 - controlParameter)*savings*production;
+}
+
+bool CapitalFunction::operator==(const CapitalFunction &a)
+{
+    return qFuzzyCompare(a.delta, delta) && qFuzzyCompare(a.savings, savings);
 }
 
 double Proportion::calcProp(const double &a, const double &b)
@@ -54,15 +69,30 @@ Proportion Proportion::makeNewProportionFromAlpha(const double &alpha) const
     };
 }
 
+bool Proportion::operator ==(const Proportion &a) const
+{
+    return qFuzzyCompare(a.a, this->a) && qFuzzyCompare(a.b, this->b) && qFuzzyCompare(a.x, this->x);
+}
+
 double CostFunction::operator()(const double &controlParameter, const double &production) const
 {
     auto num = controlParameter*saving*production;
     return num/(c + num);
 }
 
+bool CostFunction::operator==(const CostFunction &a) const
+{
+    return qFuzzyCompare(a.c, c) && qFuzzyCompare(a.saving, saving);
+}
+
 double ProductionFunction::operator()(const double &capital, const Proportion &prop) const
 {
     return ef(prop[1]*woodProduction) + rf(capital, prop[2]*woodProduction);
+}
+
+bool ProductionFunction::operator ==(const ProductionFunction &a)
+{
+    return a.ef == ef && a.rf == rf;
 }
 
 ResultPtr SimulationTier::diveInto()
@@ -104,7 +134,7 @@ double SimulationTier::computeResult(const SimulationTier &prev)
 
 SimulationTier::SimulationTier(const double &production, const double &capital, const Proportion &prop, const double &result, const int &tier, std::shared_ptr<SimulationConstants> simConstants, std::shared_ptr<CapitalFunction> capitalFunction, std::shared_ptr<ProductionFunction> productionFunction, std::shared_ptr<CostFunction> costFunction):production(production), capital(capital), proportion(prop), tier(tier), result(result),
     simConstants(simConstants), capitalFunction(capitalFunction), productionFunction(productionFunction),
-    costFunction(costFunction)
+    costFunction(costFunction),alpha(0),controlParameter(0)
 {
 
 }
@@ -123,4 +153,18 @@ SimulationTier::SimulationTier(const SimulationTier &prev, double controlParamet
         production = (*ST::productionFunction)(capital, proportion);
         //and we can finally compute a result function
         result = SimulationTier::computeResult(prev);
+}
+
+bool SimulationTier::operator==(const SimulationTier &a) const
+{
+    return qFuzzyCompare(this->alpha, a.alpha) && qFuzzyCompare(this->capital, a.capital) &&
+            qFuzzyCompare(this->controlParameter, a.controlParameter) && qFuzzyCompare(this->production, a.production) &&
+            qFuzzyCompare(this->result, a.result) && this->tier == a.tier && *capitalFunction == *(a.capitalFunction) &&
+            *productionFunction == *(a.productionFunction) && *simConstants == *(a.simConstants) && *costFunction == *(a.costFunction) &&
+            a.proportion == proportion;
+}
+
+bool SimulationConstants::operator ==(const SimulationConstants &a) const
+{
+    return a.numEpochs ==numEpochs && qFuzzyCompare(a.stepU, stepU);
 }

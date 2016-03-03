@@ -11,12 +11,16 @@ QDataStream &operator<<(QDataStream & os, const SimulationTier & st)
 
 QDataStream &operator>>(QDataStream & is, SimulationTier & st)
 {
-    double production, capital, tier, result, alpha, controlParameter;
-    Proportion prop; SimulationConstants simConstants; CapitalFunction capitalFunction;
-    ProductionFunction productionFunction; CostFunction costFunction;
+    double production, capital, result, alpha, controlParameter;
+    int tier;
+    Proportion prop;
+    SimulationConstants* simConstants = new SimulationConstants;
+    CapitalFunction* capitalFunction = new CapitalFunction;
+    ProductionFunction* productionFunction = new ProductionFunction;
+    CostFunction* costFunction = new CostFunction;
 
     is >> production >> capital >> prop >> tier >> result >> alpha >> controlParameter >>
-            simConstants >> capitalFunction >> productionFunction >> costFunction;
+            *simConstants >> *capitalFunction >> *productionFunction >> *costFunction;
     st.production = production;
     st.capital = capital;
     st.proportion = prop;
@@ -24,10 +28,10 @@ QDataStream &operator>>(QDataStream & is, SimulationTier & st)
     st.result = result;
     st.alpha = alpha;
     st.controlParameter = controlParameter;
-    st.simConstants = std::shared_ptr<SimulationConstants>(&simConstants);
-    st.capitalFunction = std::shared_ptr<CapitalFunction>(&capitalFunction);
-    st.productionFunction = std::shared_ptr<ProductionFunction>(&productionFunction);
-    st.costFunction = std::shared_ptr<CostFunction>(&costFunction);
+    st.simConstants = std::shared_ptr<SimulationConstants>(simConstants);
+    st.capitalFunction = std::shared_ptr<CapitalFunction>(capitalFunction);
+    st.productionFunction = std::shared_ptr<ProductionFunction>(productionFunction);
+    st.costFunction = std::shared_ptr<CostFunction>(costFunction);
     return is;
 }
 
@@ -52,8 +56,9 @@ QDataStream &operator<<(QDataStream & os, const SimulationConstants & c)
 
 QDataStream &operator>>(QDataStream & is, SimulationConstants &c)
 {
-    double t;
-    is >> t; c.stepU = t; is >> t; c.numEpochs = t;
+    double t; int n;
+    is >> t; c.stepU = t;
+    is >> n; c.numEpochs = n;
     return is;
 }
 
@@ -79,7 +84,7 @@ QDataStream &operator<<(QDataStream &os, const ProductionFunction & pf)
 QDataStream &operator>>(QDataStream &is, ProductionFunction &pf)
 {
     RefactorFunction rf; ExportFunction ef;
-    is >> rf; pf.rf = rf; is >> ef; pf.ef = ef;
+    is >> rf; pf.rf = rf; is >> ef; pf.ef = ef; is >> pf.woodProduction;
     return is;
 }
 

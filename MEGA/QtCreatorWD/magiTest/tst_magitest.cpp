@@ -135,6 +135,10 @@ void MagiTest::serializationTest_data()
     std::for_each(columns.begin(), columns.end(), [&rowOne](auto str){
         (rowOne << 1.0);
     });
+    QTestData& rowRandom = newRow("random");
+    std::for_each(columns.begin(), columns.end(), [&rowRandom](auto str){
+        (rowRandom << (double) rand());
+    });
 }
 
 QTEST_APPLESS_MAIN(MagiTest)

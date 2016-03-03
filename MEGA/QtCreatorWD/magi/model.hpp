@@ -11,6 +11,8 @@ struct SimulationConstants {
     int numEpochs;
     SimulationConstants(){}//serialization only
     SimulationConstants(double stepU, int numEpochs):stepU(stepU), numEpochs(numEpochs){}
+
+    bool operator == (const SimulationConstants & a) const;
 };
 
 //inner model constants, dont change in simulation run
@@ -22,6 +24,8 @@ struct CapitalFunction {
     CapitalFunction(){}//serialization only
     double operator() (const double& capital, const double& production,
                        const double& controlParameter) const;
+
+    bool operator== (const CapitalFunction& a);
 };
 
 //yet another inner model constants
@@ -33,6 +37,7 @@ struct RefactorFunction  {
     RefactorFunction(){}//serializ
     RefactorFunction(double a, double p1, double p2):a(a), p1(p1), p2(p2){}
     double operator() (const double& capital, const double& refactoredWood) const;
+    bool operator== (const RefactorFunction& a) const;
 };
 
 //export cost and overall raw wood production, for now also constants
@@ -41,6 +46,7 @@ struct ExportFunction {
     ExportFunction(){}//serial only
     ExportFunction(double e):e(e){}
     double operator() (const double& exportedWood) const;
+    bool operator==(const ExportFunction& a) const;
 };
 
 class Proportion; class SimulationTier;
@@ -54,6 +60,7 @@ struct ProductionFunction{
     ProductionFunction(double a, double p1, double p2, double exportCost, double woodProduction):
         rf(a, p1, p2), ef(exportCost), woodProduction(woodProduction){}
     double operator() (const double& capital, const Proportion& prop) const;
+    bool operator ==(const ProductionFunction& a);
 };
 
 class Proportion {
@@ -70,6 +77,7 @@ public:
     double operator[] (std::size_t i) const; //get props x_1 and x_2
     Proportion makeNewProportionFromAlpha(const double& alpha) const;
     Proportion(){}//bad, bad empty construction shit
+    bool operator ==(const Proportion& a) const;
 };
 
 struct CostFunction {
@@ -78,6 +86,7 @@ struct CostFunction {
     CostFunction(){}//for serialization
     CostFunction(double c, double saving):c(c), saving(saving){}
     double operator() (const double& controlParameter, const double& production) const;
+    bool operator== (const CostFunction& a) const;
 };
 
 struct SimulationTier;
@@ -110,6 +119,7 @@ struct SimulationTier {
                         std::shared_ptr<CostFunction> costFunction);
     SimulationTier(){}
     SimulationTier(const SimulationTier& prev, double controlParameter);
+    bool operator== (const SimulationTier& a ) const;
 };
 
 
