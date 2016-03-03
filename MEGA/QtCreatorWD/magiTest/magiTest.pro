@@ -16,5 +16,6 @@ TEMPLATE = app
 
 
 SOURCES += tst_magitest.cpp \
-    ../magi/model.cpp
+    ../magi/model.cpp \
+        ../magi/serialization.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"

@@ -1,6 +1,7 @@
 #include <QString>
 #include <QtTest>
 #include "../magi/model.hpp"
+#include "../magi/serialization.hpp"
 
 class MagiTest : public QObject
 {
@@ -85,21 +86,49 @@ void MagiTest::firstSimulationTier()
 
 void MagiTest::serializationTest()
 {
-    auto simulationConstants = std::make_shared<SimulationConstants>(ui->stepUSpinBox->value(), ui->nEpochsSpinBox->value());
-    auto capitalFunction  = std::make_shared<CapitalFunction>(ui->deltaSpinBox->value(), ui->savingSpinBox->value());
-    auto productionFunction  = std::make_shared<ProductionFunction>(ui->regASpinBox->value(), ui->regP1SpinBox->value(),
-                                                                    ui->regP2SpinBox->value(), ui->exportSpinBox->value(), ui->woodProductionSpinBox->value());
-    auto costFunction  = std::make_shared<CostFunction>(ui->CostSpinBox->value(), ui->savingSpinBox->value());
 
-    auto initialConditions = std::make_shared<ST>(ui->ProductionSpinBox->value(), ui->capitalSpinBox->value(),
-                         Proportion::makeNewProportionFromAX(ui->aSpinBox->value(), ui->xSpinBox->value()), 0, 0,
+    QFETCH(double, stepU);
+    QFETCH(double, nEpochs);
+    QFETCH(double, delta);
+    QFETCH(double, saving);
+    QFETCH(double, regA);
+    QFETCH(double, regP1);
+    QFETCH(double, regP2);
+    QFETCH(double, e);
+    QFETCH(double, wood);
+    QFETCH(double, cost);
+    QFETCH(double, production);
+    QFETCH(double, capital);
+    QFETCH(double, a);
+    QFETCH(double, x);
+    auto simulationConstants = std::make_shared<SimulationConstants>(stepU, nEpochs);
+    auto capitalFunction  = std::make_shared<CapitalFunction>(delta, saving);
+    auto productionFunction  = std::make_shared<ProductionFunction>(regA, regP1,
+                                                                    regP2, e, wood);
+    auto costFunction  = std::make_shared<CostFunction>(cost, saving);
+
+    auto st = ST(production, capital,
+                         Proportion::makeNewProportionFromAX(a, x), 0, 0,
               simulationConstants, capitalFunction, productionFunction, costFunction);
+    QFile f("/tmp/ser");
+    f.open( QIODevice::WriteOnly);
+    QDataStream out(&f);
+    out << st;
+    f.close();
+
+    f.open(QIODevice::ReadOnly);
+    QDataStream in(&f);
+    ST deser;
+    in >> deser;
+    f.close();
+
+    QCOMPARE(st, deser);
 }
 
 void MagiTest::serializationTest_data()
 {
     using namespace QTest;
-    auto columns = QVector<const char*> { "stepU", "nEpochs", "delta", "saving", "regA", "regP1", "regP2", "export", "wood", "cost",
+    auto columns = QVector<const char*> { "stepU", "nEpochs", "delta", "saving", "regA", "regP1", "regP2", "e", "wood", "cost",
             "production", "capital", "a", "x"};
     std::for_each(columns.begin(), columns.end(), [](auto t){ return addColumn<double>(t); });
     QTestData& rowOne = newRow("ones");
