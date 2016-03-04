@@ -144,11 +144,25 @@ void ExperimentModel::deleteExperiment(const QModelIndex & index)
     endRemoveRows();
 }
 
+struct SerializableModel{
+    ST initialConditions;
+    QList<ST> result;
+    ExperimentStatus status;
+
+    friend QDataStream& operator<<(QDataStream &, const SerializableModel &);
+};
+
 void ExperimentModel::serializeAll(QDataStream &stream)
 {
-    QVector<ExperimentParams> params(experiments.size());
-    std::transform(experiments.begin(), experiments.end(), params.begin(), [](ExperimentParams* ptr){
-        return *ptr;
+    QVector<SerializableModel> params(experiments.size());
+    std::transform(experiments.begin(), experiments.end(), params.begin(), [](ExperimentParams* par){
+        SerializableModel sm; sm.initialConditions = *(par->initialConditions); sm.status = par->status;
+        if (sm.status == done){
+            for (auto i: *(par->result) ){
+                sm.result.push_front(i);
+            }
+        }
+        return sm;
     });
     stream << params;
 }
@@ -206,13 +220,6 @@ ExperimentParams::ExperimentParams(std::shared_ptr<ST> initialConditions, Experi
 {
 }
 
-ExperimentParams::ExperimentParams(const ExperimentParams &a):QObject(a)
-{
-    initialConditions = a.initialConditions;
-    result = a.result;
-    status = a.status;
-}
-
 ExperimentParams::~ExperimentParams()
 {
     if (initialConditions){
@@ -221,14 +228,6 @@ ExperimentParams::~ExperimentParams()
     if (result){
         result.~__shared_ptr();
     }
-}
-
-ExperimentParams &ExperimentParams::operator =(const ExperimentParams &a)
-{
-    initialConditions = a.initialConditions;
-    result = a.result;
-    status = a.status;
-    return *this;
 }
 
 bool ExperimentParams::operator ==(const ExperimentParams &p) const
@@ -276,4 +275,12 @@ bool ExperimentModel::setData(const QModelIndex &index, const QVariant &value, i
         emit endInsertRows();
         return true;
 
+}
+
+QDataStream &operator<<(QDataStream &os, const SerializableModel &sm)
+{
+    os << sm.initialConditions << sm.status;
+    if (sm.status == done)
+        os << sm.result;
+    return os;
 }

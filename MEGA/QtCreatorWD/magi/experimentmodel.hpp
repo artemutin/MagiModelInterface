@@ -96,10 +96,10 @@ class ExperimentParams: public QObject{
 public:
     ExperimentParams(std::shared_ptr<ST> initialConditions, ExperimentStatus status = notStarted,
                      QObject * parent = 0);
-    ExperimentParams(const ExperimentParams& a);
+
     ExperimentParams(){}
     ~ExperimentParams();
-    ExperimentParams& operator =(const ExperimentParams& a);
+
     bool operator ==(const ExperimentParams& p) const;
 
     ResultPtr getResult() const;
