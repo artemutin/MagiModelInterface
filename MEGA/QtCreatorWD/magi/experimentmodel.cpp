@@ -1,4 +1,5 @@
 #include "experimentmodel.hpp"
+#include "serialization.hpp"
 #include <QFuture>
 #include <QtConcurrent/QtConcurrent>
 
@@ -202,6 +203,21 @@ void ExperimentParams::setStatus(const ExperimentStatus &value)
 ExperimentParams::ExperimentParams(std::shared_ptr<ST> initialConditions, ExperimentStatus status, QObject *parent):
     initialConditions(initialConditions), status(status), QObject(parent)
 {
+}
+
+ExperimentParams::ExperimentParams(const ExperimentParams &a)
+{
+    initialConditions = a.initialConditions;
+    result = a.result;
+    status = a.status;
+}
+
+ExperimentParams ExperimentParams::operator =(const ExperimentParams &a)
+{
+    initialConditions = a.initialConditions;
+    result = a.result;
+    status = a.status;
+    return *this;
 }
 
 void ExperimentParams::startComputation()

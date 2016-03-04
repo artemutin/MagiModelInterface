@@ -3,8 +3,12 @@
 
 #include <QDataStream>
 #include "model.hpp"
+#include "experimentmodel.hpp"
 
 const int SERIALIZATION_VERSION = 1;
+
+
+QDataStream &operator>>(QDataStream &, ExperimentParams &);
 
 QDataStream &operator<<(QDataStream &, const SimulationTier &);
 QDataStream &operator>>(QDataStream &, SimulationTier &);

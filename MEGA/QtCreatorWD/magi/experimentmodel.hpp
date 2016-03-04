@@ -86,6 +86,7 @@ class ExperimentParams: public QObject{
     Q_OBJECT
 
     friend class ExperimentModel;
+    friend QDataStream& operator <<(QDataStream&, const ExperimentParams&);
     std::shared_ptr<ST> initialConditions;
     ResultPtr result;
     ExperimentStatus status;
@@ -94,6 +95,9 @@ class ExperimentParams: public QObject{
 public:
     ExperimentParams(std::shared_ptr<ST> initialConditions, ExperimentStatus status = notStarted,
                      QObject * parent = 0);
+    ExperimentParams(const ExperimentParams& a);
+    ExperimentParams(){};
+    ExperimentParams operator =(const ExperimentParams& a);
 
     ResultPtr getResult() const;
 

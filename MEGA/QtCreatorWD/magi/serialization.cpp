@@ -127,3 +127,11 @@ QDataStream &operator>>(QDataStream &is, CostFunction & cf)
     is >> cf.c >> cf.saving;
     return is;
 }
+
+QDataStream &operator<<(QDataStream &os, const ExperimentParams &p)
+{
+    QVector<ST> vec(p.result->size());
+    std::copy(p.result->begin(), p.result->end(), list.begin());
+    os << *(p.initialConditions) << vec << p.status;
+    return os;
+}
