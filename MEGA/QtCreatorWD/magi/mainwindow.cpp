@@ -31,25 +31,20 @@ void MainWindow::addButtonClicked()
 
 void MainWindow::startButtonClicked()
 {
-    //TODO: handle multiple selection
     QItemSelectionModel *select = ui->experimentsTableView->selectionModel();
-    if (select->hasSelection()){
-        auto selectionList = select->selectedRows();
+    auto selectionList = select->selectedRows();
+    std::for_each(selectionList.begin(), selectionList.end(), [this](QModelIndex modelIndex){
         //start selected experiment
-        experiments->startExperiment( selectionList.first() );
-    }
-
+        experiments->startExperiment( modelIndex );
+    });
 }
 
 void MainWindow::showButtonClicked()
 {
-    //TODO: handle multiple selection
     QItemSelectionModel *select = ui->experimentsTableView->selectionModel();
-    if (select->hasSelection()){
-        auto selectionList = select->selectedRows();
-        int row = selectionList.first().row();
-
-        //если имеются результат (валидный шаред пойнтер)
+    auto selectionList = select->selectedRows();
+    std::for_each(selectionList.begin(), selectionList.end(), [this](QModelIndex modelIndex){
+        int row = modelIndex.row();
         if (auto result = experiments->getResult( row) ){
             auto resultForm = new OutputResultForm(this);
             //creation of result model to display in table
@@ -57,5 +52,15 @@ void MainWindow::showButtonClicked()
             resultForm->addResult(resultModel);
             addDockWidget(Qt::LeftDockWidgetArea, resultForm);
         }
-    }
+    });
+
+}
+
+void MainWindow::deleteButtonClicked()
+{
+    QItemSelectionModel *select = ui->experimentsTableView->selectionModel();
+    auto selectionList = select->selectedRows();
+    std::for_each(selectionList.begin(), selectionList.end(), [this](QModelIndex modelIndex){
+        experiments->deleteExperiment(modelIndex);
+    });
 }

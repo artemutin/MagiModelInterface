@@ -27,6 +27,7 @@ private slots:
     void addButtonClicked();
     void startButtonClicked();
     void showButtonClicked();
+    void deleteButtonClicked();
 signals:
     void initialValuesEntered(std::shared_ptr<ST> initialConditions);
 };

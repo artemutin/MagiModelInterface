@@ -64,6 +64,7 @@ public slots:
     //actualy dives into dfs
     void startExperiment(const QModelIndex&);
     void addExperiment(std::shared_ptr<ST> initialConditions);
+    void deleteExperiment(const QModelIndex&);
     //locates model in vector, and emits appropriate dataChanged l
     void computationFinished(ExperimentParams*);
 signals:
