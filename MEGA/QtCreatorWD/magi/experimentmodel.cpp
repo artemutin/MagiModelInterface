@@ -134,6 +134,15 @@ void ExperimentModel::addExperiment(std::shared_ptr<FST> initialConditions)
     setData(createIndex(0, 0, this), QVariant::fromValue(newExperiment));
 }
 
+void ExperimentModel::deleteExperiment(const QModelIndex & index)
+{
+    beginRemoveRows(index, index.row(), index.row());
+    auto it = experiments.begin();
+    std::advance(it, index.row());
+    experiments.erase(it);
+    endRemoveRows();
+}
+
 void ExperimentModel::computationFinished(ExperimentParams * experiment)
 {
     //experiment has been done, and return pointer to themself
