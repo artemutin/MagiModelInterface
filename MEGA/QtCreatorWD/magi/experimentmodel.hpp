@@ -99,15 +99,13 @@ public:
     ExperimentParams(const ExperimentParams& a);
     ExperimentParams(){}
     ~ExperimentParams();
-    ExperimentParams operator =(const ExperimentParams& a);
+    ExperimentParams& operator =(const ExperimentParams& a);
     bool operator ==(const ExperimentParams& p) const;
 
     ResultPtr getResult() const;
 
     ExperimentStatus getStatus() const;
     void setStatus(const ExperimentStatus &value);
-
-    QFutureWatcher<ResultPtr> &getWatcher();
 
 public slots:
     void startComputation();

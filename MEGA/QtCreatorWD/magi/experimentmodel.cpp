@@ -147,7 +147,7 @@ void ExperimentModel::deleteExperiment(const QModelIndex & index)
 void ExperimentModel::serializeAll(QDataStream &stream)
 {
     QVector<ExperimentParams> params(experiments.size());
-    std::transform(experiments.begin(), experiments.end(), params.begin(), [](auto ptr){
+    std::transform(experiments.begin(), experiments.end(), params.begin(), [](ExperimentParams* ptr){
         return *ptr;
     });
     stream << params;
@@ -200,17 +200,13 @@ void ExperimentParams::setStatus(const ExperimentStatus &value)
     status = value;
 }
 
-QFutureWatcher<ResultPtr>& ExperimentParams::getWatcher()
-{
-    return watcher;
-}
 
 ExperimentParams::ExperimentParams(std::shared_ptr<ST> initialConditions, ExperimentStatus status, QObject *parent):
     initialConditions(initialConditions), status(status), QObject(parent)
 {
 }
 
-ExperimentParams::ExperimentParams(const ExperimentParams &a):QObject(a.parent())
+ExperimentParams::ExperimentParams(const ExperimentParams &a):QObject(a)
 {
     initialConditions = a.initialConditions;
     result = a.result;
@@ -227,7 +223,7 @@ ExperimentParams::~ExperimentParams()
     }
 }
 
-ExperimentParams ExperimentParams::operator =(const ExperimentParams &a)
+ExperimentParams &ExperimentParams::operator =(const ExperimentParams &a)
 {
     initialConditions = a.initialConditions;
     result = a.result;
