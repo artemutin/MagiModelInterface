@@ -130,20 +130,29 @@ QDataStream &operator>>(QDataStream &is, CostFunction & cf)
 
 QDataStream &operator<<(QDataStream &os, const ExperimentParams &p)
 {
-    QVector<ST> vec(p.result->size());
-    std::copy(p.result->begin(), p.result->end(), vec.begin());
-    os << *(p.initialConditions) << vec << p.status;
+
+    os << *(p.initialConditions) << p.status;
+    if (p.status == done){
+        QVector<ST> vec(p.result->size());
+        std::copy(p.result->begin(), p.result->end(), vec.begin());
+        os << vec;
+    }
     return os;
 }
 
 QDataStream &operator>>(QDataStream &is, ExperimentParams &p)
 {
-     QVector<ST> vec;
-     ST* initialConds = new ST();
-     is >> (*initialConds) >> vec >> p.status;
+
+     ST* initialConds = new ST;
+     is >> (*initialConds) >> p.status;
      p.initialConditions = std::shared_ptr<ST>(initialConds);
-     p.result->resize(vec.size());
-     std::copy(vec.begin(), vec.end(), p.result->begin());
+     if (p.status == done){
+         QVector<ST> vec;
+         is >> vec;
+         p.result->resize(vec.size());
+         std::copy(vec.begin(), vec.end(), p.result->begin());
+     }
+
      return is;
 }
 

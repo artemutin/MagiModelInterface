@@ -200,16 +200,31 @@ void ExperimentParams::setStatus(const ExperimentStatus &value)
     status = value;
 }
 
+QFutureWatcher<ResultPtr>& ExperimentParams::getWatcher()
+{
+    return watcher;
+}
+
 ExperimentParams::ExperimentParams(std::shared_ptr<ST> initialConditions, ExperimentStatus status, QObject *parent):
     initialConditions(initialConditions), status(status), QObject(parent)
 {
 }
 
-ExperimentParams::ExperimentParams(const ExperimentParams &a)
+ExperimentParams::ExperimentParams(const ExperimentParams &a):QObject(a.parent())
 {
     initialConditions = a.initialConditions;
     result = a.result;
     status = a.status;
+}
+
+ExperimentParams::~ExperimentParams()
+{
+    if (initialConditions){
+        initialConditions.~__shared_ptr();
+    }
+    if (result){
+        result.~__shared_ptr();
+    }
 }
 
 ExperimentParams ExperimentParams::operator =(const ExperimentParams &a)
@@ -218,6 +233,22 @@ ExperimentParams ExperimentParams::operator =(const ExperimentParams &a)
     result = a.result;
     status = a.status;
     return *this;
+}
+
+bool ExperimentParams::operator ==(const ExperimentParams &p) const
+{
+    bool vectorComparison = true;
+    if (p.result != result){
+        for(auto i=p.result->begin(), j=result->begin(); i != p.result->end() && j != result->end(); i++, j++){
+            if (!(*i == *j) ){
+                vectorComparison = false;
+                break;
+            }
+        }
+    }
+
+    return (*p.initialConditions) == *initialConditions && p.status == status &&
+        vectorComparison;
 }
 
 void ExperimentParams::startComputation()

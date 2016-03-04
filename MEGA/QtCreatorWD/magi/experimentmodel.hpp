@@ -97,13 +97,17 @@ public:
     ExperimentParams(std::shared_ptr<ST> initialConditions, ExperimentStatus status = notStarted,
                      QObject * parent = 0);
     ExperimentParams(const ExperimentParams& a);
-    ExperimentParams(){};
+    ExperimentParams(){}
+    ~ExperimentParams();
     ExperimentParams operator =(const ExperimentParams& a);
+    bool operator ==(const ExperimentParams& p) const;
 
     ResultPtr getResult() const;
 
     ExperimentStatus getStatus() const;
     void setStatus(const ExperimentStatus &value);
+
+    QFutureWatcher<ResultPtr> &getWatcher();
 
 public slots:
     void startComputation();
