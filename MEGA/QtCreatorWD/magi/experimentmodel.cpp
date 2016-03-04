@@ -143,6 +143,15 @@ void ExperimentModel::deleteExperiment(const QModelIndex & index)
     endRemoveRows();
 }
 
+void ExperimentModel::serializeAll(QDataStream &stream)
+{
+    QVector<ExperimentParams> params(experiments.size());
+    std::transform(experiments.begin(), experiments.end(), params.begin(), [](auto ptr){
+        return *ptr;
+    });
+    stream << params;
+}
+
 void ExperimentModel::computationFinished(ExperimentParams * experiment)
 {
     //experiment has been done, and return pointer to themself

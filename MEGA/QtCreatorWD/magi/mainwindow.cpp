@@ -1,3 +1,4 @@
+#include<QFileDialog>
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 #include "outputresultform.hpp"
@@ -63,4 +64,16 @@ void MainWindow::deleteButtonClicked()
     std::for_each(selectionList.begin(), selectionList.end(), [this](QModelIndex modelIndex){
         experiments->deleteExperiment(modelIndex);
     });
+}
+
+void MainWindow::saveActionClicked()
+{
+    QItemSelectionModel *select = ui->experimentsTableView->selectionModel();
+    auto selectionList = select->selectedRows();
+    auto fileName = QFileDialog::getSaveFileName(this, "Сохранить результаты", "", "Save files (*.sav)");
+    QFile* f = new QFile(fileName);
+    f->open(QIODevice::WriteOnly);
+    QDataStream stream(f);
+    experiments->serializeAll(stream);
+    f->close();
 }
