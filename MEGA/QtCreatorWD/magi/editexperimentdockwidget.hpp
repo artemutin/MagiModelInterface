@@ -22,6 +22,7 @@ private:
 
 private slots:
     void buttonClicked();
+    void abxHaveChanged();
 signals:
     void initialValuesEntered(std::shared_ptr<ST> initialConditions);
 };

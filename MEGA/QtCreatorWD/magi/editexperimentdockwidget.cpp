@@ -6,6 +6,7 @@ editExperimentDockWidget::editExperimentDockWidget(QWidget *parent) :
     ui(new Ui::editExperimentDockWidget)
 {
     ui->setupUi(this);
+    emit ui->aSpinBox->valueChanged(0.1);
 }
 
 editExperimentDockWidget::~editExperimentDockWidget()
@@ -25,4 +26,15 @@ void editExperimentDockWidget::buttonClicked()
                              Proportion::makeNewProportionFromAX(ui->aSpinBox->value(), ui->xSpinBox->value()), 0, 0,
                   simulationConstants, capitalFunction, productionFunction, costFunction);
         emit initialValuesEntered(initialConditions);
+}
+
+void editExperimentDockWidget::abxHaveChanged()
+{
+    double b = Proportion::calcB(ui->aSpinBox->value(), ui->xSpinBox->value());
+    ui->bSpinBox->setValue(b);
+    if (b < 0 || b > 1){
+        ui->addButton->setEnabled(false);
+    }else{
+        ui->addButton->setEnabled(true);
+    }
 }

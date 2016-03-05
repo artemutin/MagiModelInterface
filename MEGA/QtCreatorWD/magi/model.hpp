@@ -65,13 +65,14 @@ struct ProductionFunction{
 
 class Proportion {
     static double calcProp(const double& a, const double& b);
-    static double calcB(const double& a, const double& x);
+
     Proportion(const double& a, const double& b, const double& x):a(a), b(b), x(x){}
 
 public:
     double a, b; // transform matrix elements
     double x; //actual prop of refactored wood
-
+    //used in form validation
+    static double calcB(const double& a, const double& x);
     static Proportion makeNewProportionFromAB(const double& a, const double& b);
     static Proportion makeNewProportionFromAX(const double& a, const double& x);
     double operator[] (std::size_t i) const; //get props x_1 and x_2
