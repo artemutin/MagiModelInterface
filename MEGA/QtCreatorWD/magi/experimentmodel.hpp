@@ -66,6 +66,7 @@ public slots:
     void addExperiment(std::shared_ptr<ST> initialConditions);
     void deleteExperiment(const QModelIndex&);
     void serializeAll(QDataStream& stream);
+    void deserialize(QDataStream& stream);
 
     //locates model in vector, and emits appropriate dataChanged l
     void computationFinished(ExperimentParams*);
@@ -93,6 +94,7 @@ class ExperimentParams: public QObject{
     ExperimentStatus status;
     QFutureWatcher<ResultPtr> watcher;
 
+    void setResult(const ResultPtr &value);
 public:
     ExperimentParams(std::shared_ptr<ST> initialConditions, ExperimentStatus status = notStarted,
                      QObject * parent = 0);

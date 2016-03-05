@@ -6,6 +6,7 @@
 #include "experimentmodel.hpp"
 
 const int SERIALIZATION_VERSION = 1;
+const int MAGIC_NUMBER = 0xBEEF101;
 
 
 QDataStream &operator>>(QDataStream &, ExperimentStatus &);

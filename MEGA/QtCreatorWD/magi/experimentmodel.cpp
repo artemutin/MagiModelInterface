@@ -150,6 +150,7 @@ struct SerializableModel{
     ExperimentStatus status;
 
     friend QDataStream& operator<<(QDataStream &, const SerializableModel &);
+    friend QDataStream& operator>>(QDataStream &, SerializableModel &);
 };
 
 void ExperimentModel::serializeAll(QDataStream &stream)
@@ -164,7 +165,32 @@ void ExperimentModel::serializeAll(QDataStream &stream)
         }
         return sm;
     });
+    stream << SERIALIZATION_VERSION;
     stream << params;
+}
+
+void ExperimentModel::deserialize(QDataStream &stream)
+{
+    int version;
+    stream >> version;
+    if (version != SERIALIZATION_VERSION){
+        throw std::runtime_error("Save file has incorrect version!");
+    }
+    QVector<SerializableModel> params;
+    stream >> params;
+
+    int index = rowCount(QModelIndex());
+    for (SerializableModel sm: params){
+        auto initialValues = std::shared_ptr<ST>( new ST(sm.initialConditions) );
+        auto newExperiment = new ExperimentParams(initialValues, sm.status, (QObject*) this);
+        if (sm.status == done){
+            auto result = new std::list<ST>(sm.result.size());
+            std::copy(sm.result.begin(), sm.result.end(), result->begin());
+            newExperiment->setResult(ResultPtr(result));
+        }
+        setData(createIndex(index, 0, this), QVariant::fromValue(newExperiment));
+        ++index;
+    }
 }
 
 void ExperimentModel::computationFinished(ExperimentParams * experiment)
@@ -214,6 +240,11 @@ void ExperimentParams::setStatus(const ExperimentStatus &value)
     status = value;
 }
 
+
+void ExperimentParams::setResult(const ResultPtr &value)
+{
+    result = value;
+}
 
 ExperimentParams::ExperimentParams(std::shared_ptr<ST> initialConditions, ExperimentStatus status, QObject *parent):
     initialConditions(initialConditions), status(status), QObject(parent)
@@ -283,4 +314,13 @@ QDataStream &operator<<(QDataStream &os, const SerializableModel &sm)
     if (sm.status == done)
         os << sm.result;
     return os;
+}
+
+QDataStream &operator>>(QDataStream &is, SerializableModel &sm)
+{
+    is >> sm.initialConditions >> sm.status;
+    if (sm.status == done){
+        is >> sm.result;
+    }
+    return is;
 }

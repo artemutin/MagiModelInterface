@@ -70,10 +70,24 @@ void MainWindow::saveActionClicked()
 {
     QItemSelectionModel *select = ui->experimentsTableView->selectionModel();
     auto selectionList = select->selectedRows();
-    auto fileName = QFileDialog::getSaveFileName(this, "Сохранить результаты", "", "Save files (*.sav)");
-    QFile* f = new QFile(fileName);
-    f->open(QIODevice::WriteOnly);
-    QDataStream stream(f);
-    experiments->serializeAll(stream);
-    f->close();
+    QString fileName = QFileDialog::getSaveFileName(this, "Сохранить результаты", "", "Save files (*.sav);;All files (*)");
+    if (fileName.length() != 0){
+        QFile* f = new QFile(fileName);
+        f->open(QIODevice::WriteOnly);
+        QDataStream stream(f);
+        experiments->serializeAll(stream);
+        f->close();
+    }
+}
+
+void MainWindow::loadActionClicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, "Выберите файл с результатами", "", "Save files (*.sav);;All files (*)");
+    if (fileName.length() != 0){
+        QFile* f = new QFile(fileName);
+        f->open(QIODevice::ReadOnly);
+        QDataStream stream(f);
+        experiments->deserialize(stream);
+        f->close();
+    }
 }

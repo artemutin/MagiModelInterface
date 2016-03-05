@@ -118,6 +118,7 @@ struct SimulationTier {
                         std::shared_ptr<ProductionFunction> productionFunction,
                         std::shared_ptr<CostFunction> costFunction);
     SimulationTier(){}
+    SimulationTier(const SimulationTier& a);
     SimulationTier(const SimulationTier& prev, double controlParameter);
     bool operator== (const SimulationTier& a ) const;
 };
