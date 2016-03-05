@@ -3,6 +3,13 @@
 
 #include <QDataStream>
 #include "model.hpp"
+#include "experimentmodel.hpp"
+
+const int SERIALIZATION_VERSION = 1;
+const int MAGIC_NUMBER = 0xBEEF101;
+
+
+QDataStream &operator>>(QDataStream &, ExperimentStatus &);
 
 QDataStream &operator<<(QDataStream &, const SimulationTier &);
 QDataStream &operator>>(QDataStream &, SimulationTier &);

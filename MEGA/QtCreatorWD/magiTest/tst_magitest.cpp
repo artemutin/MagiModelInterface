@@ -1,7 +1,9 @@
 #include <QString>
 #include <QtTest>
-#include "../magi/model.hpp"
-#include "../magi/serialization.hpp"
+#include "model.hpp"
+#include "serialization.hpp"
+#include "experimentmodel.hpp"
+#include "resultmodel.hpp"
 
 class MagiTest : public QObject
 {
@@ -107,13 +109,13 @@ void MagiTest::serializationTest()
                                                                     regP2, e, wood);
     auto costFunction  = std::make_shared<CostFunction>(cost, saving);
 
-    auto st = ST(production, capital,
+     ST* st = new ST(production, capital,
                          Proportion::makeNewProportionFromAX(a, x), 0, 0,
               simulationConstants, capitalFunction, productionFunction, costFunction);
     QFile f("/tmp/ser");
     f.open( QIODevice::WriteOnly);
     QDataStream out(&f);
-    out << st;
+    out << *st;
     f.close();
 
     f.open(QIODevice::ReadOnly);
@@ -122,7 +124,27 @@ void MagiTest::serializationTest()
     in >> deser;
     f.close();
 
-    QCOMPARE(st, deser);
+    QCOMPARE(*st, deser);
+
+
+    //params serialization
+    //st->simConstants->numEpochs = 5;
+    //st->simConstants->stepU = 0.1;
+    ExperimentParams p = ExperimentParams(std::shared_ptr<ST>(st));
+    QCOMPARE(p, p);
+
+    f.open( QIODevice::WriteOnly);
+    out.setDevice(&f);
+    out << p;
+    f.close();
+
+    f.open(QIODevice::ReadOnly);
+    in.setDevice(&f);
+    ExperimentParams * dp = new ExperimentParams;
+    in >> *dp;
+    f.close();
+
+    QCOMPARE(p, *dp);
 }
 
 void MagiTest::serializationTest_data()

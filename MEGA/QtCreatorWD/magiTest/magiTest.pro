@@ -14,8 +14,16 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
+INCLUDEPATH += ../magi
+HEADERS += ../magi/model.hpp \
+../magi/serialization.hpp \
+../magi/experimentmodel.hpp \
+../magi/resultmodel.hpp
+
 
 SOURCES += tst_magitest.cpp \
     ../magi/model.cpp \
-        ../magi/serialization.cpp
+        ../magi/serialization.cpp \
+        ../magi/experimentmodel.cpp \
+        ../magi/resultmodel.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"

@@ -139,6 +139,13 @@ SimulationTier::SimulationTier(const double &production, const double &capital, 
 
 }
 
+SimulationTier::SimulationTier(const SimulationTier &a):production(a.production), capital(a.capital), proportion(a.proportion), tier(a.tier), result(a.result),
+    simConstants(a.simConstants), capitalFunction(a.capitalFunction), productionFunction(a.productionFunction),
+    costFunction(a.costFunction),alpha(a.alpha),controlParameter(a.controlParameter)
+{
+
+}
+
 SimulationTier::SimulationTier(const SimulationTier &prev, double controlParameter): SimulationTier(prev)
     {
         this->controlParameter = controlParameter;

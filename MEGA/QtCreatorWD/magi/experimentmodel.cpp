@@ -1,4 +1,5 @@
 #include "experimentmodel.hpp"
+#include "serialization.hpp"
 #include <QFuture>
 #include <QtConcurrent/QtConcurrent>
 
@@ -143,6 +144,55 @@ void ExperimentModel::deleteExperiment(const QModelIndex & index)
     endRemoveRows();
 }
 
+struct SerializableModel{
+    ST initialConditions;
+    QList<ST> result;
+    ExperimentStatus status;
+
+    friend QDataStream& operator<<(QDataStream &, const SerializableModel &);
+    friend QDataStream& operator>>(QDataStream &, SerializableModel &);
+};
+
+void ExperimentModel::serializeAll(QDataStream &stream)
+{
+    QVector<SerializableModel> params(experiments.size());
+    std::transform(experiments.begin(), experiments.end(), params.begin(), [](ExperimentParams* par){
+        SerializableModel sm; sm.initialConditions = *(par->initialConditions); sm.status = par->status;
+        if (sm.status == done){
+            for (auto i: *(par->result) ){
+                sm.result.push_front(i);
+            }
+        }
+        return sm;
+    });
+    stream << SERIALIZATION_VERSION;
+    stream << params;
+}
+
+void ExperimentModel::deserialize(QDataStream &stream)
+{
+    int version;
+    stream >> version;
+    if (version != SERIALIZATION_VERSION){
+        throw std::runtime_error("Save file has incorrect version!");
+    }
+    QVector<SerializableModel> params;
+    stream >> params;
+
+    int index = rowCount(QModelIndex());
+    for (SerializableModel sm: params){
+        auto initialValues = std::shared_ptr<ST>( new ST(sm.initialConditions) );
+        auto newExperiment = new ExperimentParams(initialValues, sm.status, (QObject*) this);
+        if (sm.status == done){
+            auto result = new std::list<ST>(sm.result.size());
+            std::copy(sm.result.begin(), sm.result.end(), result->begin());
+            newExperiment->setResult(ResultPtr(result));
+        }
+        setData(createIndex(index, 0, this), QVariant::fromValue(newExperiment));
+        ++index;
+    }
+}
+
 void ExperimentModel::computationFinished(ExperimentParams * experiment)
 {
     //experiment has been done, and return pointer to themself
@@ -190,9 +240,41 @@ void ExperimentParams::setStatus(const ExperimentStatus &value)
     status = value;
 }
 
+
+void ExperimentParams::setResult(const ResultPtr &value)
+{
+    result = value;
+}
+
 ExperimentParams::ExperimentParams(std::shared_ptr<ST> initialConditions, ExperimentStatus status, QObject *parent):
     initialConditions(initialConditions), status(status), QObject(parent)
 {
+}
+
+ExperimentParams::~ExperimentParams()
+{
+    if (initialConditions){
+        initialConditions.~__shared_ptr();
+    }
+    if (result){
+        result.~__shared_ptr();
+    }
+}
+
+bool ExperimentParams::operator ==(const ExperimentParams &p) const
+{
+    bool vectorComparison = true;
+    if (p.result != result){
+        for(auto i=p.result->begin(), j=result->begin(); i != p.result->end() && j != result->end(); i++, j++){
+            if (!(*i == *j) ){
+                vectorComparison = false;
+                break;
+            }
+        }
+    }
+
+    return (*p.initialConditions) == *initialConditions && p.status == status &&
+        vectorComparison;
 }
 
 void ExperimentParams::startComputation()
@@ -224,4 +306,21 @@ bool ExperimentModel::setData(const QModelIndex &index, const QVariant &value, i
         emit endInsertRows();
         return true;
 
+}
+
+QDataStream &operator<<(QDataStream &os, const SerializableModel &sm)
+{
+    os << sm.initialConditions << sm.status;
+    if (sm.status == done)
+        os << sm.result;
+    return os;
+}
+
+QDataStream &operator>>(QDataStream &is, SerializableModel &sm)
+{
+    is >> sm.initialConditions >> sm.status;
+    if (sm.status == done){
+        is >> sm.result;
+    }
+    return is;
 }
