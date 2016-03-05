@@ -59,7 +59,11 @@ void MainWindow::showButtonClicked()
 void MainWindow::deleteButtonClicked()
 {
     QItemSelectionModel *select = ui->experimentsTableView->selectionModel();
-    auto selectionList = select->selectedRows();
+    QList<QModelIndex> selectionList = select->selectedRows();
+    //sort in reverse order for indeces to be correct in multiple deletion operation
+    std::sort(selectionList.begin(), selectionList.end(), [](QModelIndex left, QModelIndex right){
+        return left.row() > right.row();
+    });
     std::for_each(selectionList.begin(), selectionList.end(), [this](QModelIndex modelIndex){
         experiments->deleteExperiment(modelIndex);
     });
