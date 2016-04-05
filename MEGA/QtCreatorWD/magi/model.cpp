@@ -150,14 +150,15 @@ SimulationTier::SimulationTier(const SimulationTier &prev, double controlParamet
     {
         this->controlParameter = controlParameter;
         ST::tier = prev.tier + 1;
+
+        //changed proportion and capital affects a production, ofcourse
+        production = (*ST::productionFunction)(prev.capital, prev.proportion);
         //since last year, the amount of capital of industry has changed due to investments and amortisation
-        capital = (*ST::capitalFunction)(prev.capital, prev.production, controlParameter);
+        capital = (*ST::capitalFunction)(prev.capital, production, controlParameter);
         //also we bought some lobby from last years investment budget
-        alpha = (*ST::costFunction)(controlParameter, prev.production);
+        alpha = (*ST::costFunction)(controlParameter, production);
         //this lobby has changed a proportion of wood production
         proportion = prev.proportion.makeNewProportionFromAlpha(alpha);
-        //changed proportion and capital affects a production, ofcourse
-        production = (*ST::productionFunction)(capital, proportion);
         //and we can finally compute a result function
         result = SimulationTier::computeResult(prev);
 }

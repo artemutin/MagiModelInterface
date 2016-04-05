@@ -47,7 +47,7 @@
        <item row="5" column="1">
         <widget class="QSpinBox" name="regASpinBox">
          <property name="maximum">
-          <number>1000</number>
+          <number>10000</number>
          </property>
          <property name="value">
           <number>1</number>
@@ -97,7 +97,7 @@
        <item row="23" column="0">
         <widget class="QLabel" name="label_13">
          <property name="text">
-          <string>Капитал</string>
+          <string>Капитал(тыс)</string>
          </property>
         </widget>
        </item>
@@ -250,21 +250,21 @@
        <item row="16" column="0">
         <widget class="QLabel" name="label_10">
          <property name="text">
-          <string>Объем заготовки</string>
+          <string>Объем заготовки(тыс м3)</string>
          </property>
         </widget>
        </item>
        <item row="17" column="0">
         <widget class="QLabel" name="label_11">
          <property name="text">
-          <string>Цена преобразований</string>
+          <string>Цена преобразований(тыс)</string>
          </property>
         </widget>
        </item>
        <item row="17" column="1">
         <widget class="QDoubleSpinBox" name="CostSpinBox">
          <property name="maximum">
-          <double>1000.000000000000000</double>
+          <double>100000000.000000000000000</double>
          </property>
          <property name="value">
           <double>500.000000000000000</double>
@@ -274,7 +274,7 @@
        <item row="24" column="0">
         <widget class="QLabel" name="label_14">
          <property name="text">
-          <string>ВВП отрасли</string>
+          <string>ВВП отрасли(тыс)</string>
          </property>
         </widget>
        </item>
